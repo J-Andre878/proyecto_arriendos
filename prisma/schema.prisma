@@ -1,0 +1,337 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model amenities {
+  id                 Int                  @id @default(autoincrement())
+  name               String               @unique @db.VarChar(100)
+  icon               String?              @db.VarChar(100)
+  category           String?              @db.VarChar(50)
+  created_at         DateTime?            @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime?            @default(now()) @db.Timestamptz(6)
+  property_amenities property_amenities[]
+
+  @@index([category], map: "idx_amenities_category")
+  @@index([name], map: "idx_amenities_name")
+}
+
+model audit_logs {
+  id          Int       @id @default(autoincrement())
+  user_id     Int?
+  action      String    @db.VarChar(100)
+  entity_type String    @db.VarChar(100)
+  entity_id   Int?
+  old_values  Json?
+  new_values  Json?
+  ip_address  String?   @db.Inet
+  user_agent  String?
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  users       users?    @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+
+  @@index([action], map: "idx_audit_logs_action")
+  @@index([created_at(sort: Desc)], map: "idx_audit_logs_created_at")
+  @@index([entity_type, entity_id], map: "idx_audit_logs_entity_id")
+  @@index([entity_type], map: "idx_audit_logs_entity_type")
+  @@index([user_id], map: "idx_audit_logs_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model calendar_availability {
+  id              Int        @id @default(autoincrement())
+  property_id     Int
+  date            DateTime   @db.Date
+  available       Boolean?   @default(true)
+  price_per_night Decimal    @db.Decimal(10, 2)
+  min_nights      Int?       @default(1)
+  created_at      DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime?  @default(now()) @db.Timestamptz(6)
+  properties      properties @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([property_id, date])
+  @@index([property_id, available], map: "idx_calendar_available")
+  @@index([date], map: "idx_calendar_date")
+  @@index([property_id, date], map: "idx_calendar_property_date_range")
+  @@index([property_id], map: "idx_calendar_property_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model cancellation_rules {
+  id                Int          @id @default(autoincrement())
+  name              String       @unique @db.VarChar(100)
+  description       String?
+  days_before       Int
+  refund_percentage Decimal      @db.Decimal(5, 2)
+  created_at        DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime?    @default(now()) @db.Timestamptz(6)
+  properties        properties[]
+
+  @@index([name], map: "idx_cancellation_rules_name")
+}
+
+model favorites {
+  id          Int        @id @default(autoincrement())
+  user_id     Int
+  property_id Int
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  properties  properties @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users       users      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, property_id])
+  @@index([property_id], map: "idx_favorites_property_id")
+  @@index([user_id], map: "idx_favorites_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model messages {
+  id                                Int           @id @default(autoincrement())
+  sender_id                         Int
+  receiver_id                       Int
+  reservation_id                    Int?
+  property_id                       Int?
+  message                           String
+  sent_at                           DateTime?     @default(now()) @db.Timestamptz(6)
+  read                              Boolean?      @default(false)
+  read_at                           DateTime?     @db.Timestamptz(6)
+  properties                        properties?   @relation(fields: [property_id], references: [id], onUpdate: NoAction)
+  users_messages_receiver_idTousers users         @relation("messages_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  reservations                      reservations? @relation(fields: [reservation_id], references: [id], onUpdate: NoAction)
+  users_messages_sender_idTousers   users         @relation("messages_sender_idTousers", fields: [sender_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([property_id], map: "idx_messages_property_id")
+  @@index([receiver_id, read], map: "idx_messages_read")
+  @@index([receiver_id], map: "idx_messages_receiver_id")
+  @@index([reservation_id], map: "idx_messages_reservation_id")
+  @@index([sender_id], map: "idx_messages_sender_id")
+  @@index([sent_at], map: "idx_messages_sent_at")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model notifications {
+  id            Int       @id @default(autoincrement())
+  user_id       Int
+  type          String    @db.VarChar(50)
+  title         String    @db.VarChar(150)
+  message       String
+  reference_url String?
+  reference_id  Int?
+  read          Boolean?  @default(false)
+  read_at       DateTime? @db.Timestamptz(6)
+  created_at    DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime? @default(now()) @db.Timestamptz(6)
+  users         users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([created_at], map: "idx_notifications_created_at")
+  @@index([user_id, read], map: "idx_notifications_read")
+  @@index([type], map: "idx_notifications_type")
+  @@index([user_id], map: "idx_notifications_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model payments {
+  id                       Int          @id @default(autoincrement())
+  reservation_id           Int
+  amount                   Decimal      @db.Decimal(10, 2)
+  payment_method           String       @db.VarChar(50)
+  payment_status           String?      @default("pending") @db.VarChar(50)
+  platform_fee             Decimal?     @default(0.00) @db.Decimal(10, 2)
+  host_amount              Decimal?     @default(0.00) @db.Decimal(10, 2)
+  transaction_number       String?      @unique @db.VarChar(100)
+  payment_gateway_response String?
+  refund_amount            Decimal?     @default(0.00) @db.Decimal(10, 2)
+  refund_date              DateTime?    @db.Timestamptz(6)
+  created_at               DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime?    @default(now()) @db.Timestamptz(6)
+  reservations             reservations @relation(fields: [reservation_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([created_at], map: "idx_payments_created_at")
+  @@index([payment_status], map: "idx_payments_payment_status")
+  @@index([reservation_id], map: "idx_payments_reservation_id")
+  @@index([transaction_number], map: "idx_payments_transaction_number")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model properties {
+  id                    Int                     @id @default(autoincrement())
+  user_id               Int
+  title                 String                  @db.VarChar(200)
+  description           String?
+  address               String                  @db.VarChar(255)
+  city                  String?                 @default("Loja") @db.VarChar(100)
+  latitude              Decimal?                @db.Decimal(10, 8)
+  longitude             Decimal?                @db.Decimal(11, 8)
+  num_guests            Int                     @default(1)
+  num_rooms             Int                     @default(1)
+  num_beds              Int                     @default(1)
+  num_bathrooms         Int                     @default(1)
+  price_per_night       Decimal                 @db.Decimal(10, 2)
+  cancellation_rule_id  Int?
+  is_active             Boolean?                @default(true)
+  property_type         String?                 @default("apartment") @db.VarChar(50)
+  created_at            DateTime?               @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime?               @default(now()) @db.Timestamptz(6)
+  deleted_at            DateTime?               @db.Timestamptz(6)
+  calendar_availability calendar_availability[]
+  favorites             favorites[]
+  messages              messages[]
+  cancellation_rules    cancellation_rules?     @relation(fields: [cancellation_rule_id], references: [id], onUpdate: NoAction)
+  users                 users                   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  property_amenities    property_amenities[]
+  property_images       property_images[]
+  reservations          reservations[]
+  reviews               reviews[]
+
+  @@index([city], map: "idx_properties_city")
+  @@index([is_active], map: "idx_properties_is_active")
+  @@index([latitude, longitude], map: "idx_properties_location")
+  @@index([price_per_night], map: "idx_properties_price")
+  @@index([user_id], map: "idx_properties_user_id")
+}
+
+model property_amenities {
+  id          Int        @id @default(autoincrement())
+  property_id Int
+  amenity_id  Int
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  amenities   amenities  @relation(fields: [amenity_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  properties  properties @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([property_id, amenity_id])
+  @@index([amenity_id], map: "idx_property_amenities_amenity_id")
+  @@index([property_id], map: "idx_property_amenities_property_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model property_images {
+  id            Int        @id @default(autoincrement())
+  property_id   Int
+  image_url     String
+  is_main       Boolean?   @default(false)
+  display_order Int?       @default(1)
+  created_at    DateTime?  @default(now()) @db.Timestamptz(6)
+  properties    properties @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([property_id, is_main], map: "idx_property_images_is_main")
+  @@index([property_id], map: "idx_property_images_property_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model reservations {
+  id                  Int        @id @default(autoincrement())
+  property_id         Int
+  user_id             Int
+  check_in            DateTime   @db.Date
+  check_out           DateTime   @db.Date
+  num_guests          Int        @default(1)
+  total_price         Decimal    @db.Decimal(10, 2)
+  status              String?    @default("pending") @db.VarChar(50)
+  cancellation_reason String?
+  cancelled_at        DateTime?  @db.Timestamptz(6)
+  created_at          DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime?  @default(now()) @db.Timestamptz(6)
+  deleted_at          DateTime?  @db.Timestamptz(6)
+  messages            messages[]
+  payments            payments[]
+  properties          properties @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users               users      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  reviews             reviews[]
+
+  @@index([check_in], map: "idx_reservations_check_in")
+  @@index([check_out], map: "idx_reservations_check_out")
+  @@index([check_in, check_out], map: "idx_reservations_dates")
+  @@index([property_id], map: "idx_reservations_property_id")
+  @@index([status], map: "idx_reservations_status")
+  @@index([user_id], map: "idx_reservations_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model reviews {
+  id                 Int           @id @default(autoincrement())
+  reservation_id     Int?
+  property_id        Int
+  user_id            Int
+  rating             Int
+  comment            String?
+  cleanliness        Int?
+  communication      Int?
+  location           Int?
+  value_for_money    Int?
+  host_response      String?
+  host_response_date DateTime?     @db.Timestamptz(6)
+  created_at         DateTime?     @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime?     @default(now()) @db.Timestamptz(6)
+  deleted_at         DateTime?     @db.Timestamptz(6)
+  properties         properties    @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  reservations       reservations? @relation(fields: [reservation_id], references: [id], onUpdate: NoAction)
+  users              users         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([property_id], map: "idx_reviews_property_id")
+  @@index([rating], map: "idx_reviews_rating")
+  @@index([reservation_id], map: "idx_reviews_reservation_id")
+  @@index([user_id], map: "idx_reviews_user_id")
+}
+
+model roles {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(50)
+  description String?
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  users       users[]
+}
+
+model user_sessions {
+  id            Int       @id @default(autoincrement())
+  user_id       Int
+  token         String    @unique
+  refresh_token String?   @unique
+  device_info   String?
+  ip_address    String?   @db.Inet
+  user_agent    String?
+  is_active     Boolean?  @default(true)
+  expires_at    DateTime  @db.Timestamptz(6)
+  last_activity DateTime? @default(now()) @db.Timestamptz(6)
+  created_at    DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime? @default(now()) @db.Timestamptz(6)
+  users         users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([expires_at], map: "idx_user_sessions_expires_at")
+  @@index([is_active], map: "idx_user_sessions_is_active")
+  @@index([refresh_token], map: "idx_user_sessions_refresh_token")
+  @@index([token], map: "idx_user_sessions_token")
+  @@index([user_id], map: "idx_user_sessions_user_id")
+}
+
+model users {
+  id                                   Int             @id @default(autoincrement())
+  name                                 String          @db.VarChar(150)
+  surname                              String?         @db.VarChar(150)
+  email                                String          @unique @db.VarChar(255)
+  phone                                String?         @db.VarChar(20)
+  password                             String?
+  avatar_url                           String?
+  auth_provider                        String          @default("local") @db.VarChar(50)
+  is_active                            Boolean?        @default(true)
+  role_id                              Int             @default(1)
+  created_at                           DateTime?       @default(now()) @db.Timestamptz(6)
+  updated_at                           DateTime?       @default(now()) @db.Timestamptz(6)
+  deleted_at                           DateTime?       @db.Timestamptz(6)
+  audit_logs                           audit_logs[]
+  favorites                            favorites[]
+  messages_messages_receiver_idTousers messages[]      @relation("messages_receiver_idTousers")
+  messages_messages_sender_idTousers   messages[]      @relation("messages_sender_idTousers")
+  notifications                        notifications[]
+  properties                           properties[]
+  reservations                         reservations[]
+  reviews                              reviews[]
+  user_sessions                        user_sessions[]
+  roles                                roles           @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([auth_provider], map: "idx_users_auth_provider")
+  @@index([email], map: "idx_users_email")
+  @@index([role_id], map: "idx_users_role_id")
+}
