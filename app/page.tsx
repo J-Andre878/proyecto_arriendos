@@ -1,4 +1,5 @@
 import PropertyCard from "./components/PropertyCard";
+import Navbar from "./components/Navbar";
 import { prisma } from "@/lib/prisma";
 
 export default async function Home() {
@@ -29,6 +30,9 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      {/* Navbar */}
+      <Navbar />
+
       {/* Header / Hero Section */}
       <header className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">

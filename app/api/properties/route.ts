@@ -43,10 +43,10 @@ export async function GET(request: Request) {
       include: {
         property_images: {
           orderBy: [
-            { is_main: "desc" }, // Imágenes principales primero
+            { is_main: "desc" },
             { display_order: "asc" },
           ],
-          take: 5, // Máximo 5 imágenes por propiedad
+          take: 5,
         },
         users: {
           select: {
