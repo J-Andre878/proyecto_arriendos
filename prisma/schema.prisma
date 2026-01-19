@@ -157,34 +157,38 @@ model payments {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model properties {
-  id                    Int                     @id @default(autoincrement())
-  user_id               Int
-  title                 String                  @db.VarChar(200)
-  description           String?
-  address               String                  @db.VarChar(255)
-  city                  String?                 @default("Loja") @db.VarChar(100)
-  latitude              Decimal?                @db.Decimal(10, 8)
-  longitude             Decimal?                @db.Decimal(11, 8)
-  num_guests            Int                     @default(1)
-  num_rooms             Int                     @default(1)
-  num_beds              Int                     @default(1)
-  num_bathrooms         Int                     @default(1)
-  price_per_night       Decimal                 @db.Decimal(10, 2)
-  cancellation_rule_id  Int?
-  is_active             Boolean?                @default(true)
-  property_type         String?                 @default("apartment") @db.VarChar(50)
-  created_at            DateTime?               @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime?               @default(now()) @db.Timestamptz(6)
-  deleted_at            DateTime?               @db.Timestamptz(6)
-  calendar_availability calendar_availability[]
-  favorites             favorites[]
-  messages              messages[]
-  cancellation_rules    cancellation_rules?     @relation(fields: [cancellation_rule_id], references: [id], onUpdate: NoAction)
-  users                 users                   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  property_amenities    property_amenities[]
-  property_images       property_images[]
-  reservations          reservations[]
-  reviews               reviews[]
+  id                     Int                      @id @default(autoincrement())
+  user_id                Int
+  title                  String                   @db.VarChar(200)
+  description            String?
+  address                String                   @db.VarChar(255)
+  city                   String?                  @default("Loja") @db.VarChar(100)
+  latitude               Decimal?                 @db.Decimal(10, 8)
+  longitude              Decimal?                 @db.Decimal(11, 8)
+  num_guests             Int                      @default(1)
+  num_rooms              Int                      @default(1)
+  num_beds               Int                      @default(1)
+  num_bathrooms          Int                      @default(1)
+  price_per_night        Decimal                  @db.Decimal(10, 2)
+  cancellation_rule_id   Int?
+  is_active              Boolean?                 @default(true)
+  property_type          String?                  @default("apartment") @db.VarChar(50)
+  created_at             DateTime?                @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime?                @default(now()) @db.Timestamptz(6)
+  deleted_at             DateTime?                @db.Timestamptz(6)
+  publication_status     String?                  @default("draft") @db.VarChar(50)
+  published_at           DateTime?                @db.Timestamptz(6)
+  expires_at             DateTime?                @db.Timestamptz(6)
+  calendar_availability  calendar_availability[]
+  favorites              favorites[]
+  messages               messages[]
+  cancellation_rules     cancellation_rules?      @relation(fields: [cancellation_rule_id], references: [id], onUpdate: NoAction)
+  users                  users                    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  property_amenities     property_amenities[]
+  property_images        property_images[]
+  property_subscriptions property_subscriptions[]
+  reservations           reservations[]
+  reviews                reviews[]
 
   @@index([city], map: "idx_properties_city")
   @@index([is_active], map: "idx_properties_is_active")
@@ -307,31 +311,49 @@ model user_sessions {
 }
 
 model users {
-  id                                   Int             @id @default(autoincrement())
-  name                                 String          @db.VarChar(150)
-  surname                              String?         @db.VarChar(150)
-  email                                String          @unique @db.VarChar(255)
-  phone                                String?         @db.VarChar(20)
+  id                                   Int                      @id @default(autoincrement())
+  name                                 String                   @db.VarChar(150)
+  surname                              String?                  @db.VarChar(150)
+  email                                String                   @unique @db.VarChar(255)
+  phone                                String?                  @db.VarChar(20)
   password                             String?
   avatar_url                           String?
-  auth_provider                        String          @default("local") @db.VarChar(50)
-  is_active                            Boolean?        @default(true)
-  role_id                              Int             @default(1)
-  created_at                           DateTime?       @default(now()) @db.Timestamptz(6)
-  updated_at                           DateTime?       @default(now()) @db.Timestamptz(6)
-  deleted_at                           DateTime?       @db.Timestamptz(6)
+  auth_provider                        String                   @default("local") @db.VarChar(50)
+  is_active                            Boolean?                 @default(true)
+  role_id                              Int                      @default(1)
+  created_at                           DateTime?                @default(now()) @db.Timestamptz(6)
+  updated_at                           DateTime?                @default(now()) @db.Timestamptz(6)
+  deleted_at                           DateTime?                @db.Timestamptz(6)
   audit_logs                           audit_logs[]
   favorites                            favorites[]
-  messages_messages_receiver_idTousers messages[]      @relation("messages_receiver_idTousers")
-  messages_messages_sender_idTousers   messages[]      @relation("messages_sender_idTousers")
+  messages_messages_receiver_idTousers messages[]               @relation("messages_receiver_idTousers")
+  messages_messages_sender_idTousers   messages[]               @relation("messages_sender_idTousers")
   notifications                        notifications[]
   properties                           properties[]
+  property_subscriptions               property_subscriptions[]
   reservations                         reservations[]
   reviews                              reviews[]
   user_sessions                        user_sessions[]
-  roles                                roles           @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  roles                                roles                    @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([auth_provider], map: "idx_users_auth_provider")
   @@index([email], map: "idx_users_email")
   @@index([role_id], map: "idx_users_role_id")
+}
+
+model property_subscriptions {
+  id                     Int        @id @default(autoincrement())
+  property_id            Int
+  user_id                Int
+  status                 String?    @default("pending") @db.VarChar(50)
+  plan_price             Decimal?   @default(3.00) @db.Decimal(10, 2)
+  starts_at              DateTime?  @db.Timestamptz(6)
+  expires_at             DateTime?  @db.Timestamptz(6)
+  auto_renew             Boolean?   @default(false)
+  payment_method         String?    @db.VarChar(50)
+  stripe_subscription_id String?    @db.VarChar(255)
+  created_at             DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime?  @default(now()) @db.Timestamptz(6)
+  properties             properties @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users                  users      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }

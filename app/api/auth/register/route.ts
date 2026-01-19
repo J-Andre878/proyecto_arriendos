@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, surname, email, phone, password } = body;
 
-    // Validaciones básicas
+    // Validaciones
     if (!name || !email || !password) {
       return NextResponse.json(
         { success: false, error: "Nombre, email y contraseña son requeridos" },
@@ -15,16 +15,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validar formato de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { success: false, error: "Email inválido" },
-        { status: 400 }
-      );
-    }
-
-    // Validar longitud de contraseña
     if (password.length < 6) {
       return NextResponse.json(
         { success: false, error: "La contraseña debe tener al menos 6 caracteres" },
@@ -32,22 +22,22 @@ export async function POST(request: Request) {
       );
     }
 
-    // Verificar si el email ya existe
+    // Verificar si el usuario ya existe
     const existingUser = await prisma.users.findUnique({
       where: { email },
     });
 
     if (existingUser) {
       return NextResponse.json(
-        { success: false, error: "El email ya está registrado" },
+        { success: false, error: "Este email ya está registrado" },
         { status: 400 }
       );
     }
 
-    // Hashear la contraseña
+    // Hash de la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Crear el usuario
+    // Crear usuario
     const user = await prisma.users.create({
       data: {
         name,
@@ -56,29 +46,22 @@ export async function POST(request: Request) {
         phone: phone || null,
         password: hashedPassword,
         auth_provider: "local",
-        is_active: true,
-        role_id: 1, // Rol por defecto (usuario normal)
-      },
-      select: {
-        id: true,
-        name: true,
-        surname: true,
-        email: true,
-        phone: true,
-        avatar_url: true,
-        created_at: true,
+        role_id: 1, // rol usuario normal
       },
     });
 
     return NextResponse.json({
       success: true,
-      message: "Usuario registrado exitosamente",
-      user,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
     });
   } catch (error) {
     console.error("Error en registro:", error);
     return NextResponse.json(
-      { success: false, error: "Error al registrar usuario" },
+      { success: false, error: "Error al crear usuario" },
       { status: 500 }
     );
   }

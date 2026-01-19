@@ -1,28 +1,27 @@
-import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
-
-const JWT_SECRET = process.env.JWT_SECRET || "tu-secret-key-muy-seguro-cambiar-en-produccion";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export interface UserPayload {
   userId: number;
   email: string;
-  roleId: number;
-  roleName: string;
+  name?: string;
 }
 
 export async function getCurrentUser(): Promise<UserPayload | null> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
+    const session = await getServerSession(authOptions);
 
-    if (!token) {
+    if (!session?.user?.id) {
       return null;
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload;
-    return decoded;
+    return {
+      userId: parseInt(session.user.id),
+      email: session.user.email!,
+      name: session.user.name || undefined,
+    };
   } catch (error) {
-    console.error("Error al verificar token:", error);
+    console.error("Error al obtener sesión:", error);
     return null;
   }
 }

@@ -25,6 +25,7 @@ export async function POST(request: Request) {
       num_bathrooms,
       price_per_night,
       property_type,
+      images,
     } = body;
 
     // Validaciones básicas
@@ -42,7 +43,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Crear la propiedad
+    // Crear la propiedad como pendiente de pago
     const property = await prisma.properties.create({
       data: {
         user_id: user.userId,
@@ -56,7 +57,8 @@ export async function POST(request: Request) {
         num_bathrooms: num_bathrooms || 1,
         price_per_night,
         property_type: property_type || "apartment",
-        is_active: true,
+        is_active: false, // No se activa hasta que se pague
+        publication_status: "pending_payment", // Estado inicial
       },
       include: {
         users: {
@@ -68,6 +70,18 @@ export async function POST(request: Request) {
         },
       },
     });
+
+    // Guardar imágenes si se enviaron
+    if (images && Array.isArray(images) && images.length > 0) {
+      await prisma.property_images.createMany({
+        data: images.map((img: {url: string}, index: number) => ({
+          property_id: property.id,
+          image_url: img.url,
+          is_main: index === 0, // Primera imagen es la principal
+          display_order: index + 1,
+        })),
+      });
+    }
 
     return NextResponse.json({
       success: true,

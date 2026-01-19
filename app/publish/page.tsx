@@ -3,19 +3,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
+import { useSession } from "next-auth/react";
 
 export default function PublishPage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();;
+  const loading = status === "loading";
   const [submitting, setSubmitting] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
   const [error, setError] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<{url: string, public_id: string}[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -29,28 +28,36 @@ export default function PublishPage() {
     property_type: "apartment",
   });
 
-  // Verificar autenticación
   useEffect(() => {
-    async function checkAuth() {
-      try {
-        const response = await fetch("/api/auth/me");
-        const data = await response.json();
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
 
-        if (data.success) {
-          setUser(data.user);
-        } else {
-          router.push("/login");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        router.push("/login");
-      } finally {
-        setLoading(false);
-      }
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    
+    if (files.length > 10) {
+      setError("Máximo 10 imágenes permitidas");
+      return;
     }
 
-    checkAuth();
-  }, [router]);
+    setSelectedFiles(files);
+    
+    // Crear previews
+    const urls = files.map(file => URL.createObjectURL(file));
+    setPreviewUrls(urls);
+    setError("");
+  };
+
+  const removeImage = (index: number) => {
+    const newFiles = selectedFiles.filter((_, i) => i !== index);
+    const newUrls = previewUrls.filter((_, i) => i !== index);
+    
+    URL.revokeObjectURL(previewUrls[index]);
+    setSelectedFiles(newFiles);
+    setPreviewUrls(newUrls);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,19 +65,47 @@ export default function PublishPage() {
     setSubmitting(true);
 
     try {
+      // 1. Subir imágenes primero si hay
+      let imageUrls: {url: string, public_id: string}[] = [];
+      if (selectedFiles.length > 0) {
+        setUploadingImages(true);
+        const formDataImages = new FormData();
+        selectedFiles.forEach(file => {
+          formDataImages.append("images", file);
+        });
+
+        const uploadResponse = await fetch("/api/upload/images", {
+          method: "POST",
+          body: formDataImages,
+        });
+
+        const uploadData = await uploadResponse.json();
+        
+        if (!uploadData.success) {
+          throw new Error(uploadData.error || "Error al subir imágenes");
+        }
+
+        imageUrls = uploadData.images;
+        setUploadedImages(imageUrls);
+        setUploadingImages(false);
+      }
+
+      // 2. Crear propiedad con imágenes
       const response = await fetch("/api/properties/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           price_per_night: parseFloat(formData.price_per_night),
+          images: imageUrls,
         }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        router.push(`/property/${data.property.id}`);
+        // Redirigir a la página de pago
+        router.push(`/publish/${data.property.id}/payment`);
       } else {
         setError(data.error || "Error al publicar la propiedad");
       }
@@ -226,8 +261,8 @@ export default function PublishPage() {
                     type="number"
                     required
                     min="1"
-                    value={formData.num_guests}
-                    onChange={(e) => setFormData({ ...formData, num_guests: parseInt(e.target.value) })}
+                    value={formData.num_guests || ''}
+                    onChange={(e) => setFormData({ ...formData, num_guests: parseInt(e.target.value) || 0 })}
                     className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -241,8 +276,8 @@ export default function PublishPage() {
                     type="number"
                     required
                     min="1"
-                    value={formData.num_rooms}
-                    onChange={(e) => setFormData({ ...formData, num_rooms: parseInt(e.target.value) })}
+                    value={formData.num_rooms || ''}
+                    onChange={(e) => setFormData({ ...formData, num_rooms: parseInt(e.target.value) || 0 })}
                     className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -256,8 +291,8 @@ export default function PublishPage() {
                     type="number"
                     required
                     min="1"
-                    value={formData.num_beds}
-                    onChange={(e) => setFormData({ ...formData, num_beds: parseInt(e.target.value) })}
+                    value={formData.num_beds || ''}
+                    onChange={(e) => setFormData({ ...formData, num_beds: parseInt(e.target.value) || 0 })}
                     className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -271,12 +306,65 @@ export default function PublishPage() {
                     type="number"
                     required
                     min="1"
-                    value={formData.num_bathrooms}
-                    onChange={(e) => setFormData({ ...formData, num_bathrooms: parseInt(e.target.value) })}
+                    value={formData.num_bathrooms || ''}
+                    onChange={(e) => setFormData({ ...formData, num_bathrooms: parseInt(e.target.value) || 0 })}
                     className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
+            </div>
+
+            {/* Imágenes */}
+            <div className="border-b border-gray-200 pb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Imágenes</h2>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Fotos de la propiedad
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageSelect}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <p className="mt-2 text-sm text-gray-500">
+                  Puedes subir hasta 10 imágenes. Formatos: JPG, PNG, WEBP
+                </p>
+              </div>
+
+              {/* Preview de imágenes */}
+              {previewUrls.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium text-gray-700 mb-3">
+                    {previewUrls.length} imagen{previewUrls.length > 1 ? 'es' : ''} seleccionada{previewUrls.length > 1 ? 's' : ''}
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {previewUrls.map((url, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={url}
+                          alt={`Preview ${index + 1}`}
+                          className="w-full h-32 object-cover rounded-lg"
+                        />
+                        {index === 0 && (
+                          <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                            Principal
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Precio */}
@@ -317,10 +405,10 @@ export default function PublishPage() {
               </button>
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={submitting || uploadingImages}
                 className="flex-1 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
-                {submitting ? "Publicando..." : "Publicar Propiedad"}
+                {uploadingImages ? "Subiendo imágenes..." : submitting ? "Publicando..." : "Publicar Propiedad"}
               </button>
             </div>
           </form>

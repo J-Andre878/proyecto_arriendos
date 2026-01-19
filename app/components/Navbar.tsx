@@ -1,49 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
+import { useState } from "react";
 
 export default function Navbar() {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
+  const loading = status === "loading";
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const response = await fetch("/api/auth/me");
-      const data = await response.json();
-
-      if (data.success) {
-        setUser(data.user);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await fetch("/api/auth/logout", { method: "POST" });
-      setUser(null);
-      setMenuOpen(false);
-      router.refresh();
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
+    setMenuOpen(false);
   };
 
   return (
@@ -59,7 +27,7 @@ export default function Navbar() {
           <div className="hidden md:flex md:items-center md:gap-4">
             {loading ? (
               <div className="h-8 w-24 animate-pulse rounded bg-gray-200"></div>
-            ) : user ? (
+            ) : session ? (
               <>
                 <Link
                   href="/publish"
@@ -73,9 +41,9 @@ export default function Navbar() {
                     className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 transition-colors hover:bg-gray-50"
                   >
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white font-semibold">
-                      {user.name.charAt(0).toUpperCase()}
+                      {session.user?.name?.charAt(0).toUpperCase() || "U"}
                     </div>
-                    <span className="font-medium text-gray-700">{user.name}</span>
+                    <span className="font-medium text-gray-700">{session.user?.name || session.user?.email}</span>
                   </button>
 
                   {/* Dropdown */}
@@ -161,10 +129,10 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-gray-200 py-4">
-            {user ? (
+            {session ? (
               <div className="space-y-2">
                 <div className="px-4 py-2 font-semibold text-gray-900">
-                  {user.name}
+                  {session.user?.name || session.user?.email}
                 </div>
                 <Link
                   href="/publish"

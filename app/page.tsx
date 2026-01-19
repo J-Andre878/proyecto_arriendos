@@ -7,6 +7,7 @@ export default async function Home() {
   const properties = await prisma.properties.findMany({
     where: {
       is_active: true,
+      publication_status: "active", // Solo mostrar propiedades pagadas
       deleted_at: null,
     },
     include: {
