@@ -57,7 +57,7 @@ export default function PaymentPage() {
     setError("");
 
     try {
-      const response = await fetch("/api/stripe/create-checkout-session", {
+      const response = await fetch("/api/paypal/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ propertyId: params.propertyId }),
@@ -66,10 +66,10 @@ export default function PaymentPage() {
       const data = await response.json();
 
       if (data.success && data.url) {
-        // Redirigir a Stripe Checkout
+        // Redirigir a PayPal
         window.location.href = data.url;
       } else {
-        setError(data.error || "Error al crear sesión de pago");
+        setError(data.error || "Error al crear orden de pago");
         setProcessing(false);
       }
     } catch (err) {
@@ -238,7 +238,7 @@ export default function PaymentPage() {
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-500">
             🔒 Pago seguro procesado por{" "}
-            <span className="font-semibold">Stripe</span>
+            <span className="font-semibold">PayPal</span>
           </p>
           <p className="text-xs text-gray-400 mt-2">
             Tus datos de pago están encriptados y protegidos

@@ -351,9 +351,9 @@ model property_subscriptions {
   expires_at             DateTime?  @db.Timestamptz(6)
   auto_renew             Boolean?   @default(false)
   payment_method         String?    @db.VarChar(50)
-  stripe_subscription_id String?    @db.VarChar(255)
   created_at             DateTime?  @default(now()) @db.Timestamptz(6)
   updated_at             DateTime?  @default(now()) @db.Timestamptz(6)
+  payment_transaction_id String?    @db.VarChar(255)
   properties             properties @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   users                  users      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }

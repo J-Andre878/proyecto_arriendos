@@ -58,7 +58,7 @@ export async function POST(request: Request) {
         price_per_night,
         property_type: property_type || "apartment",
         is_active: false, // No se activa hasta que se pague
-        publication_status: "pending_payment", // Estado inicial
+        // publication_status lo maneja la BD con default 'draft'
       },
       include: {
         users: {

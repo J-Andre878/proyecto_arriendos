@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import FavoriteButton from "./FavoriteButton";
 
 interface PropertyCardProps {
   id: number;
@@ -35,6 +36,11 @@ export default function PropertyCard({
     >
       {/* Imagen principal */}
       <div className="relative h-72 w-full overflow-hidden bg-gray-200">
+        {/* Botón de favorito */}
+        <div className="absolute right-3 top-3 z-10">
+          <FavoriteButton propertyId={id} />
+        </div>
+
         {mainImage ? (
           <Image
             src={mainImage.image_url}

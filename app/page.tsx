@@ -7,7 +7,7 @@ export default async function Home() {
   const properties = await prisma.properties.findMany({
     where: {
       is_active: true,
-      publication_status: "active", // Solo mostrar propiedades pagadas
+      // TODO: Agregar filtro publication_status cuando Prisma lo reconozca
       deleted_at: null,
     },
     include: {
@@ -46,34 +46,81 @@ export default async function Home() {
               experiencias inolvidables.
             </p>
 
-            {/* Barra de búsqueda básica */}
+            {/* Barra de búsqueda avanzada (solo interfaz, sin funcionalidad) */}
             <div className="mx-auto mt-10 max-w-4xl">
-              <div className="flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-2xl sm:flex-row sm:items-center">
-                <div className="flex-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 rounded-2xl bg-white p-6 shadow-2xl">
+                {/* Ciudad */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
                   <input
                     type="text"
-                    placeholder="¿A dónde vas?"
-                    className="w-full rounded-lg border-0 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ej: Loja"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-                <div className="flex-1">
-                  <input
-                    type="date"
-                    className="w-full rounded-lg border-0 px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="flex-1">
-                  <select className="w-full rounded-lg border-0 px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>Huéspedes</option>
-                    <option>1 huésped</option>
-                    <option>2 huéspedes</option>
-                    <option>3 huéspedes</option>
-                    <option>4+ huéspedes</option>
+                {/* Tipo de propiedad */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de propiedad</label>
+                  <select className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Todos</option>
+                    <option value="apartment">Departamento</option>
+                    <option value="house">Casa</option>
+                    <option value="room">Habitación</option>
+                    <option value="studio">Estudio</option>
+                    <option value="villa">Villa</option>
+                    <option value="cabin">Cabaña</option>
                   </select>
                 </div>
-                <button className="rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-blue-700">
-                  Buscar
-                </button>
+                {/* Número de habitaciones */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Habitaciones</label>
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="Ej: 2"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                {/* Número de camas */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Camas</label>
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="Ej: 2"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                {/* Capacidad de huéspedes */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Huéspedes</label>
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="Ej: 4"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                {/* Precio mínimo */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Precio mínimo</label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="$ Min"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                {/* Precio máximo */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Precio máximo</label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="$ Max"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
               </div>
             </div>
           </div>

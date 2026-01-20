@@ -2,12 +2,18 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+interface RouteParams {
+  params: Promise<{ id: string }>;
+}
+
+/**
+ * DELETE /api/properties/[id]/delete
+ * Elimina (soft delete) una propiedad del usuario
+ */
+export async function DELETE(request: Request, { params }: RouteParams) {
   try {
     const user = await getCurrentUser();
+
     if (!user) {
       return NextResponse.json(
         { success: false, error: "No autenticado" },
@@ -17,14 +23,10 @@ export async function GET(
 
     const { id } = await params;
     const propertyId = parseInt(id);
-    
+
+    // Verificar que la propiedad existe y pertenece al usuario
     const property = await prisma.properties.findUnique({
       where: { id: propertyId },
-      include: {
-        property_images: {
-          orderBy: { display_order: 'asc' }
-        }
-      }
     });
 
     if (!property) {
@@ -34,23 +36,30 @@ export async function GET(
       );
     }
 
-    // Solo el dueño puede ver propiedades pending_payment
-    const pubStatus = (property as any).publication_status;
-    if (property.user_id !== user.userId && pubStatus !== "active") {
+    if (property.user_id !== user.userId) {
       return NextResponse.json(
-        { success: false, error: "No tienes permiso para ver esta propiedad" },
+        { success: false, error: "No tienes permiso para eliminar esta propiedad" },
         { status: 403 }
       );
     }
 
+    // Soft delete
+    await prisma.properties.update({
+      where: { id: propertyId },
+      data: {
+        deleted_at: new Date(),
+        is_active: false,
+      },
+    });
+
     return NextResponse.json({
       success: true,
-      property,
+      message: "Propiedad eliminada exitosamente",
     });
   } catch (error) {
-    console.error("Error al obtener propiedad:", error);
+    console.error("Error al eliminar propiedad:", error);
     return NextResponse.json(
-      { success: false, error: "Error al obtener la propiedad" },
+      { success: false, error: "Error al eliminar propiedad" },
       { status: 500 }
     );
   }

@@ -11,7 +11,8 @@ export default function SuccessPage() {
   const { status } = useSession();
   const [loading, setLoading] = useState(true);
   const [verified, setVerified] = useState(false);
-  const sessionId = searchParams.get("session_id");
+  const [error, setError] = useState("");
+  const token = searchParams.get("token"); // PayPal orderId
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -19,14 +20,35 @@ export default function SuccessPage() {
       return;
     }
 
-    if (status === "authenticated" && sessionId) {
-      // Pequeño delay para asegurar que el webhook se procesó
-      setTimeout(() => {
-        setVerified(true);
-        setLoading(false);
-      }, 2000);
+    if (status === "authenticated" && token) {
+      capturePayment();
     }
-  }, [status, sessionId]);
+  }, [status, token]);
+
+  const capturePayment = async () => {
+    try {
+      const response = await fetch("/api/paypal/capture-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: token,
+          propertyId: params.propertyId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setVerified(true);
+      } else {
+        setError(data.error || "Error al verificar el pago");
+      }
+    } catch (err) {
+      setError("Error al verificar el pago. Contacta con soporte.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -35,6 +57,28 @@ export default function SuccessPage() {
           <div className="h-16 w-16 animate-spin rounded-full border-4 border-blue-600 border-t-transparent mx-auto"></div>
           <p className="mt-4 text-gray-600 font-medium">Verificando tu pago...</p>
           <p className="mt-2 text-sm text-gray-500">Esto tomará solo unos segundos</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center">
+          <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-red-100 mb-6">
+            <svg className="h-12 w-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-3">Error al Procesar Pago</h1>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <button
+            onClick={() => router.push(`/publish/${params.propertyId}/payment`)}
+            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition"
+          >
+            Intentar de Nuevo
+          </button>
         </div>
       </div>
     );
@@ -102,7 +146,7 @@ export default function SuccessPage() {
               onClick={() => router.push("/")}
               className="w-full border-2 border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition"
             >
-              Volver al Inicio
+              Ver Todas las Publicaciones
             </button>
           </div>
 
