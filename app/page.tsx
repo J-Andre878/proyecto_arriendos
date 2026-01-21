@@ -1,6 +1,7 @@
 import PropertyCard from "./components/PropertyCard";
 import Navbar from "./components/Navbar";
 import { prisma } from "@/lib/prisma";
+import SearchBar from "./components/SearchBar";
 
 export default async function Home() {
   // Obtener propiedades activas con sus imágenes
@@ -46,83 +47,8 @@ export default async function Home() {
               experiencias inolvidables.
             </p>
 
-            {/* Barra de búsqueda avanzada (solo interfaz, sin funcionalidad) */}
-            <div className="mx-auto mt-10 max-w-4xl">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 rounded-2xl bg-white p-6 shadow-2xl">
-                {/* Ciudad */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
-                  <input
-                    type="text"
-                    placeholder="Ej: Loja"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                {/* Tipo de propiedad */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de propiedad</label>
-                  <select className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">Todos</option>
-                    <option value="apartment">Departamento</option>
-                    <option value="house">Casa</option>
-                    <option value="room">Habitación</option>
-                    <option value="studio">Estudio</option>
-                    <option value="villa">Villa</option>
-                    <option value="cabin">Cabaña</option>
-                  </select>
-                </div>
-                {/* Número de habitaciones */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Habitaciones</label>
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="Ej: 2"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                {/* Número de camas */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Camas</label>
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="Ej: 2"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                {/* Capacidad de huéspedes */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Huéspedes</label>
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="Ej: 4"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                {/* Precio mínimo */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Precio mínimo</label>
-                  <input
-                    type="number"
-                    min="0"
-                    placeholder="$ Min"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                {/* Precio máximo */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Precio máximo</label>
-                  <input
-                    type="number"
-                    min="0"
-                    placeholder="$ Max"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-            </div>
+            {/* Barra de búsqueda */}
+            <SearchBar />
           </div>
         </div>
       </header>

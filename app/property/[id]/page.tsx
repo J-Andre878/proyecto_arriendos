@@ -36,8 +36,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     notFound();
   }
 
-  const mainImage = property.property_images.find((img) => img.is_main) || property.property_images[0];
-  const otherImages = property.property_images.filter((img) => !img.is_main);
+  const mainImage = property.property_images.find((img: typeof property.property_images[0]) => img.is_main) || property.property_images[0];
+  const otherImages = property.property_images.filter((img: typeof property.property_images[0]) => !img.is_main);
 
   return (
     <div className="min-h-screen bg-gray-50">

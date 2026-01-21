@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@/app/generated/prisma';
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,7 +22,6 @@ export async function GET(request: NextRequest) {
     const where: any = {
       is_active: true,
       deleted_at: null,
-      publication_status: 'published'
     };
     
     if (city) {
@@ -112,10 +109,10 @@ export async function GET(request: NextRequest) {
     });
     
     // Calcular rating promedio para cada propiedad
-    const propertiesWithRating = properties.map(property => ({
+    const propertiesWithRating = properties.map((property: any) => ({
       ...property,
       averageRating: property.reviews.length > 0
-        ? property.reviews.reduce((sum, r) => sum + r.rating, 0) / property.reviews.length
+        ? property.reviews.reduce((sum: number, r: any) => sum + Number(r.rating), 0) / property.reviews.length
         : 0,
       reviewCount: property.reviews.length
     }));
