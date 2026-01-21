@@ -186,6 +186,7 @@ model properties {
   users                  users                    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   property_amenities     property_amenities[]
   property_images        property_images[]
+  property_phones        property_phones[]
   property_subscriptions property_subscriptions[]
   reservations           reservations[]
   reviews                reviews[]
@@ -222,6 +223,19 @@ model property_images {
 
   @@index([property_id, is_main], map: "idx_property_images_is_main")
   @@index([property_id], map: "idx_property_images_property_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model property_phones {
+  id          Int        @id @default(autoincrement())
+  property_id Int
+  phone_number String      @db.VarChar(20)
+  is_primary  Boolean?    @default(false)
+  created_at  DateTime?   @default(now()) @db.Timestamptz(6)
+  properties  properties  @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([property_id], map: "idx_property_phones_property_id")
+  @@unique([property_id, phone_number], map: "unique_property_phone")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
