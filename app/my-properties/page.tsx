@@ -299,6 +299,14 @@ export default function MyPropertiesPage() {
 
                         {/* Acciones */}
                         <div className="mt-auto flex flex-wrap gap-3">
+                          {/* Botón editar */}
+                          <Link
+                            href={`/property/${property.id}/edit`}
+                            className="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-indigo-700"
+                          >
+                            ✏️ Editar
+                          </Link>
+
                           {/* Botón según estado */}
                           {!property.is_active &&
                           property.publication_status === "draft" ? (
