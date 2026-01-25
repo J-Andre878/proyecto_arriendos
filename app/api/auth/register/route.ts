@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { validatePhoneNumber, normalizePhoneNumber } from "@/lib/phoneValidation";
 
 export async function POST(request: Request) {
   try {
@@ -22,6 +23,19 @@ export async function POST(request: Request) {
       );
     }
 
+    // Validar teléfono si se proporciona
+    let normalizedPhone = null;
+    if (phone && phone.trim()) {
+      const phoneValidation = validatePhoneNumber(phone);
+      if (!phoneValidation.isValid) {
+        return NextResponse.json(
+          { success: false, error: phoneValidation.error },
+          { status: 400 }
+        );
+      }
+      normalizedPhone = normalizePhoneNumber(phone);
+    }
+
     // Verificar si el usuario ya existe
     const existingUser = await prisma.users.findUnique({
       where: { email },
@@ -37,16 +51,28 @@ export async function POST(request: Request) {
     // Hash de la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Obtener el rol de usuario (user)
+    const userRole = await prisma.roles.findUnique({
+      where: { name: "user" },
+    });
+
+    if (!userRole) {
+      return NextResponse.json(
+        { success: false, error: "Error en la configuración del sistema" },
+        { status: 500 }
+      );
+    }
+
     // Crear usuario
     const user = await prisma.users.create({
       data: {
         name,
         surname: surname || null,
         email,
-        phone: phone || null,
+        phone: normalizedPhone,
         password: hashedPassword,
         auth_provider: "local",
-        role_id: 1, // rol usuario normal
+        role_id: userRole.id,
       },
     });
 

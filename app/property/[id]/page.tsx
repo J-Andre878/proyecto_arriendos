@@ -25,9 +25,13 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           id: true,
           name: true,
           email: true,
+          phone: true,
           avatar_url: true,
           created_at: true,
         },
+      },
+      property_phones: {
+        orderBy: [{ is_primary: "desc" }, { id: "asc" }],
       },
     },
   });
@@ -73,25 +77,25 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               </h2>
 
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4">
+                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4 bg-gradient-to-br from-blue-50 to-blue-100">
                   <span className="text-3xl">👥</span>
-                  <span className="mt-2 text-sm text-gray-600">Huéspedes</span>
-                  <span className="text-lg font-semibold">{property.num_guests}</span>
+                  <span className="mt-2 text-base font-bold text-gray-700">Huéspedes</span>
+                  <span className="text-2xl font-bold text-gray-900">{property.num_guests}</span>
                 </div>
-                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4">
+                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4 bg-gradient-to-br from-green-50 to-green-100">
                   <span className="text-3xl">🛏️</span>
-                  <span className="mt-2 text-sm text-gray-600">Habitaciones</span>
-                  <span className="text-lg font-semibold">{property.num_rooms}</span>
+                  <span className="mt-2 text-base font-bold text-gray-700">Habitaciones</span>
+                  <span className="text-2xl font-bold text-gray-900">{property.num_rooms}</span>
                 </div>
-                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4">
+                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4 bg-gradient-to-br from-purple-50 to-purple-100">
                   <span className="text-3xl">🛌</span>
-                  <span className="mt-2 text-sm text-gray-600">Camas</span>
-                  <span className="text-lg font-semibold">{property.num_beds}</span>
+                  <span className="mt-2 text-base font-bold text-gray-700">Camas</span>
+                  <span className="text-2xl font-bold text-gray-900">{property.num_beds}</span>
                 </div>
-                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4">
+                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4 bg-gradient-to-br from-orange-50 to-orange-100">
                   <span className="text-3xl">🚿</span>
-                  <span className="mt-2 text-sm text-gray-600">Baños</span>
-                  <span className="text-lg font-semibold">{property.num_bathrooms}</span>
+                  <span className="mt-2 text-base font-bold text-gray-700">Baños</span>
+                  <span className="text-2xl font-bold text-gray-900">{property.num_bathrooms}</span>
                 </div>
               </div>
             </div>
@@ -116,41 +120,60 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             </div>
           </div>
 
-          {/* Columna derecha - Reserva y host */}
+          {/* Columna derecha - Información de contacto */}
           <div className="lg:col-span-1">
-            {/* Card de reserva */}
-            <div className="sticky top-8 rounded-lg bg-white p-6 shadow-lg border-2 border-gray-200">
+            {/* Card de contacto */}
+            <div className="rounded-lg bg-white p-6 shadow-lg border-2 border-blue-200">
               <div className="mb-6">
-                <div className="flex items-baseline">
-                  <span className="text-4xl font-bold text-gray-900">
-                    ${property.price_per_night.toString()}
-                  </span>
-                  <span className="ml-2 text-gray-600">por noche</span>
-                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  ${property.price_per_night.toString()}
+                </h3>
+                <p className="text-gray-600">por noche</p>
               </div>
 
-              <button className="w-full rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 py-3 px-4 text-white font-semibold hover:from-blue-700 hover:to-indigo-700 transition mb-4">
-                Reservar
-              </button>
+              {/* Teléfonos de contacto */}
+              {property.property_phones && property.property_phones.length > 0 && (
+                <div className="space-y-2 mb-3">
+                  {property.property_phones.map((phoneObj, idx) => (
+                    <div key={phoneObj.id} className="flex flex-col gap-1 border border-blue-100 rounded-lg p-2 bg-blue-50">
+                      <span className="text-xs text-blue-600 font-semibold">
+                        {phoneObj.is_primary ? "Teléfono principal" : `Teléfono ${idx + 1}`}
+                      </span>
+                      <div className="flex gap-2">
+                        <a
+                          href={`tel:${phoneObj.phone_number}`}
+                          className="flex-1 flex items-center justify-center rounded bg-gradient-to-r from-green-600 to-emerald-600 py-2 px-3 text-white font-semibold hover:from-green-700 hover:to-emerald-700 transition"
+                        >
+                          📞 Llamar
+                        </a>
+                        <a
+                          href={`https://wa.me/593${phoneObj.phone_number.replace(/^0/, '')}?text=Hola, estoy interesado en tu propiedad: ${property.title}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 flex items-center justify-center rounded bg-gradient-to-r from-green-500 to-teal-500 py-2 px-3 text-white font-semibold hover:from-green-600 hover:to-teal-600 transition"
+                        >
+                          💬 WhatsApp
+                        </a>
+                      </div>
+                      <span className="text-blue-900 font-mono text-sm text-center">{phoneObj.phone_number}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
 
-              <p className="text-center text-sm text-gray-500">
-                No se te cobrará todavía
+              {/* Botón Email */}
+              {property.users.email && (
+                <a 
+                  href={`mailto:${property.users.email}?subject=Consulta sobre: ${property.title}`}
+                  className="flex items-center justify-center w-full rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 py-3 px-4 text-white font-semibold hover:from-blue-700 hover:to-indigo-700 transition"
+                >
+                  ✉️ Enviar Email
+                </a>
+              )}
+
+              <p className="mt-4 text-center text-sm text-gray-600 bg-blue-50 p-3 rounded">
+                ℹ️ Contacta directamente con el propietario para conocer disponibilidad y detalles.
               </p>
-
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-gray-600">${property.price_per_night.toString()} × 5 noches</span>
-                  <span className="font-semibold">${(parseFloat(property.price_per_night.toString()) * 5).toFixed(2)}</span>
-                </div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-gray-600">Tarifa de servicio</span>
-                  <span className="font-semibold">$15.00</span>
-                </div>
-                <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
-                  <span className="text-lg font-bold">Total</span>
-                  <span className="text-lg font-bold">${(parseFloat(property.price_per_night.toString()) * 5 + 15).toFixed(2)}</span>
-                </div>
-              </div>
             </div>
 
             {/* Información del host */}
@@ -181,19 +204,50 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   </p>
                 </div>
               </div>
-              <button className="mt-4 w-full rounded-lg border-2 border-gray-300 py-2 px-4 font-medium text-gray-700 hover:bg-gray-50 transition">
-                Contactar al anfitrión
-              </button>
+              
+              {/* Información de contacto */}
+              <div className="mt-4 space-y-3">
+                {property.users.email && (
+                  <div className="flex items-center rounded-lg bg-gray-50 p-3">
+                    <span className="mr-3 text-lg">✉️</span>
+                    <div>
+                      <p className="text-xs text-gray-600">Email</p>
+                      <p className="font-medium text-gray-900">{property.users.email}</p>
+                    </div>
+                  </div>
+                )}
+                
+                {property.property_phones && property.property_phones.length > 0 && (
+                  <div className="space-y-2">
+                    {property.property_phones.map((phoneObj, idx) => (
+                      <div key={phoneObj.id} className="flex items-center rounded-lg bg-blue-50 p-3 border border-blue-200">
+                        <span className="mr-3 text-lg">📱</span>
+                        <div>
+                          <p className="text-xs text-blue-600 font-semibold">
+                            {phoneObj.is_primary ? "Teléfono principal" : `Teléfono ${idx + 1}`}
+                          </p>
+                          <a
+                            href={`tel:${phoneObj.phone_number}`}
+                            className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                          >
+                            {phoneObj.phone_number}
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Aviso legal */}
-        <div className="mt-12 rounded-lg bg-yellow-50 border border-yellow-200 p-6">
-          <p className="text-sm text-yellow-800">
-            ⚠️ <strong>Nota importante:</strong> Esta es una plataforma de demostración. 
-            La funcionalidad de reserva aún no está disponible. Ponte en contacto directamente 
-            con el anfitrión para más información.
+        <div className="mt-12 rounded-lg bg-blue-50 border border-blue-200 p-6">
+          <p className="text-sm text-blue-800">
+            ℹ️ <strong>Información importante:</strong> Esta plataforma conecta a propietarios e interesados. 
+            Puedes contactar directamente al propietario usando los números de teléfono o email disponibles. 
+            Asegúrate de acordar los términos directamente con el anfitrión.
           </p>
         </div>
       </main>

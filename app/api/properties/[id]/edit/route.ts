@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { validatePhoneNumber, normalizePhoneNumber } from "@/lib/phoneValidation";
 
 export async function PUT(
   request: Request,
@@ -25,6 +26,7 @@ export async function PUT(
       description,
       address,
       city,
+      phones,
       num_guests,
       num_rooms,
       num_beds,
@@ -54,9 +56,9 @@ export async function PUT(
     }
 
     // Validaciones básicas
-    if (!title || !description || !address || !price_per_night) {
+    if (!title || !description || !address || !price_per_night || !phones || !Array.isArray(phones) || phones.length === 0) {
       return NextResponse.json(
-        { success: false, error: "Faltan campos requeridos" },
+        { success: false, error: "Faltan campos requeridos (incluidos los teléfonos)" },
         { status: 400 }
       );
     }
@@ -67,6 +69,25 @@ export async function PUT(
         { status: 400 }
       );
     }
+
+    // Validar y normalizar teléfonos
+    const normalizedPhones: string[] = [];
+    for (const phone of phones) {
+      const phoneValidation = validatePhoneNumber(phone);
+      if (!phoneValidation.isValid) {
+        return NextResponse.json(
+          { success: false, error: phoneValidation.error || "Teléfono inválido" },
+          { status: 400 }
+        );
+      }
+      normalizedPhones.push(normalizePhoneNumber(phone));
+    }
+
+    // Actualizar el teléfono del usuario al primer número
+    await prisma.users.update({
+      where: { id: user.userId },
+      data: { phone: normalizedPhones[0] },
+    });
 
     // Actualizar la propiedad
     const updatedProperty = await prisma.properties.update({
@@ -108,6 +129,19 @@ export async function PUT(
         })),
       });
     }
+
+    // Actualizar teléfonos: eliminar antiguos y crear nuevos
+    await prisma.property_phones.deleteMany({
+      where: { property_id: propertyId },
+    });
+
+    await prisma.property_phones.createMany({
+      data: normalizedPhones.map((phone, idx) => ({
+        property_id: propertyId,
+        phone_number: phone,
+        is_primary: idx === 0,
+      })),
+    });
 
     return NextResponse.json({
       success: true,

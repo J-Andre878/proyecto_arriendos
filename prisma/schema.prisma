@@ -162,6 +162,7 @@ model properties {
   description            String?
   address                String                   @db.VarChar(255)
   city                   String?                  @default("Loja") @db.VarChar(100)
+  province               String?                  @default("Loja") @db.VarChar(100)
   latitude               Decimal?                 @db.Decimal(10, 8)
   longitude              Decimal?                 @db.Decimal(11, 8)
   num_guests             Int                      @default(1)
@@ -191,6 +192,7 @@ model properties {
   reviews                reviews[]
 
   @@index([city], map: "idx_properties_city")
+  @@index([province], map: "idx_properties_province")
   @@index([is_active], map: "idx_properties_is_active")
   @@index([latitude, longitude], map: "idx_properties_location")
   @@index([price_per_night], map: "idx_properties_price")

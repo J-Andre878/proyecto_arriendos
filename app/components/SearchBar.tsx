@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 export default function SearchBar() {
   const router = useRouter();
   const [filters, setFilters] = useState({
+    province: "",
     city: "",
     propertyType: "",
     numGuests: "",
@@ -28,6 +29,7 @@ export default function SearchBar() {
 
     const queryParams = new URLSearchParams();
 
+    if (filters.province) queryParams.append("province", filters.province);
     if (filters.city) queryParams.append("city", filters.city);
     if (filters.propertyType) queryParams.append("propertyType", filters.propertyType);
     if (filters.numGuests) queryParams.append("numGuests", filters.numGuests);
@@ -43,6 +45,19 @@ export default function SearchBar() {
   return (
     <form onSubmit={handleSearch} className="mx-auto mt-10 max-w-4xl">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 rounded-2xl bg-white p-6 shadow-2xl">
+        {/* Provincia */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Provincia</label>
+          <input
+            type="text"
+            name="province"
+            placeholder="Ej: Loja"
+            value={filters.province}
+            onChange={handleFilterChange}
+            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
         {/* Ciudad */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>

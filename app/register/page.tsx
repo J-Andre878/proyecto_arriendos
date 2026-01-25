@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import { validatePhoneNumber } from "@/lib/phoneValidation";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -17,6 +18,20 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setFormData({ ...formData, phone: value });
+    
+    // Validar el teléfono mientras escribe
+    if (value.trim()) {
+      const validation = validatePhoneNumber(value);
+      setPhoneError(validation.error || "");
+    } else {
+      setPhoneError("");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +41,15 @@ export default function RegisterPage() {
     if (formData.password !== formData.confirmPassword) {
       setError("Las contraseñas no coinciden");
       return;
+    }
+
+    // Validar teléfono si se proporciona
+    if (formData.phone.trim()) {
+      const phoneValidation = validatePhoneNumber(formData.phone);
+      if (!phoneValidation.isValid) {
+        setError(phoneValidation.error || "Teléfono inválido");
+        return;
+      }
     }
 
     setLoading(true);
@@ -141,16 +165,24 @@ export default function RegisterPage() {
             {/* Teléfono */}
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                Teléfono
+                Teléfono (Opcional)
               </label>
               <input
                 id="phone"
                 type="tel"
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="0999999999"
+                onChange={handlePhoneChange}
+                className={`mt-1 block w-full rounded-lg border px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${
+                  phoneError
+                    ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                }`}
+                placeholder="0999999999 o 9999999999"
               />
+              {phoneError && (
+                <p className="mt-1 text-sm text-red-600">{phoneError}</p>
+              )}
+              <p className="mt-1 text-xs text-gray-500">Formato: 10 dígitos (ej: 0999999999)</p>
             </div>
 
             {/* Contraseña */}

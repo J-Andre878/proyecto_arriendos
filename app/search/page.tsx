@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Navbar from "@/app/components/Navbar";
 import PropertyCard from "@/app/components/PropertyCard";
 
@@ -22,7 +22,7 @@ interface Property {
   }>;
 }
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [properties, setProperties] = useState<Property[]>([]);
@@ -31,6 +31,7 @@ export default function SearchPage() {
 
   // Estado del formulario
   const [filters, setFilters] = useState({
+    province: searchParams.get("province") || "",
     city: searchParams.get("city") || "",
     propertyType: searchParams.get("propertyType") || "",
     numGuests: searchParams.get("numGuests") || "",
@@ -53,6 +54,7 @@ export default function SearchPage() {
     try {
       const queryParams = new URLSearchParams();
 
+      if (filters.province) queryParams.append("province", filters.province);
       if (filters.city) queryParams.append("city", filters.city);
       if (filters.propertyType) queryParams.append("propertyType", filters.propertyType);
       if (filters.numGuests) queryParams.append("numGuests", filters.numGuests);
@@ -93,6 +95,7 @@ export default function SearchPage() {
     // Actualizar URL con los parámetros
     const queryParams = new URLSearchParams();
 
+    if (filters.province) queryParams.append("province", filters.province);
     if (filters.city) queryParams.append("city", filters.city);
     if (filters.propertyType) queryParams.append("propertyType", filters.propertyType);
     if (filters.numGuests) queryParams.append("numGuests", filters.numGuests);
@@ -108,6 +111,7 @@ export default function SearchPage() {
 
   const handleReset = () => {
     setFilters({
+      province: "",
       city: "",
       propertyType: "",
       numGuests: "",
@@ -139,6 +143,21 @@ export default function SearchPage() {
           className="mb-12 rounded-2xl bg-white p-8 shadow-lg"
         >
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Provincia */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Provincia
+              </label>
+              <input
+                type="text"
+                name="province"
+                placeholder="Ej: Loja"
+                value={filters.province}
+                onChange={handleFilterChange}
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
             {/* Ciudad */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -368,5 +387,13 @@ export default function SearchPage() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <SearchPageContent />
+    </Suspense>
   );
 }

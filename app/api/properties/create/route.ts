@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { validatePhoneNumber, normalizePhoneNumber } from "@/lib/phoneValidation";
 
 export async function POST(request: Request) {
   try {
@@ -18,7 +19,9 @@ export async function POST(request: Request) {
       title,
       description,
       address,
+
       city,
+      phones,
       num_guests,
       num_rooms,
       num_beds,
@@ -28,10 +31,11 @@ export async function POST(request: Request) {
       images,
     } = body;
 
+
     // Validaciones básicas
-    if (!title || !description || !address || !price_per_night) {
+    if (!title || !description || !address || !price_per_night || !phones || !Array.isArray(phones) || phones.length === 0) {
       return NextResponse.json(
-        { success: false, error: "Faltan campos requeridos" },
+        { success: false, error: "Faltan campos requeridos (incluidos los teléfonos)" },
         { status: 400 }
       );
     }
@@ -41,6 +45,33 @@ export async function POST(request: Request) {
         { success: false, error: "El precio debe ser mayor a 0" },
         { status: 400 }
       );
+    }
+
+    // Validar y normalizar teléfonos
+    const normalizedPhones: string[] = [];
+    for (const phone of phones) {
+      const phoneValidation = validatePhoneNumber(phone);
+      if (!phoneValidation.isValid) {
+        return NextResponse.json(
+          { success: false, error: phoneValidation.error || "Teléfono inválido" },
+          { status: 400 }
+        );
+      }
+      normalizedPhones.push(normalizePhoneNumber(phone));
+    }
+
+    // Actualizar el teléfono del usuario si no lo tiene
+    // Verificar si el usuario ya tiene teléfono registrado
+    const existingUser = await prisma.users.findUnique({
+      where: { id: user.userId },
+      select: { phone: true }
+    });
+
+    if (!existingUser?.phone && normalizedPhones.length > 0) {
+      await prisma.users.update({
+        where: { id: user.userId },
+        data: { phone: normalizedPhones[0] },
+      });
     }
 
     // Crear la propiedad como pendiente de pago
@@ -69,6 +100,15 @@ export async function POST(request: Request) {
           },
         },
       },
+    });
+
+    // Guardar teléfonos asociados a la propiedad
+    await prisma.property_phones.createMany({
+      data: normalizedPhones.map((phone, idx) => ({
+        property_id: property.id,
+        phone_number: phone,
+        is_primary: idx === 0,
+      })),
     });
 
     // Guardar imágenes si se enviaron

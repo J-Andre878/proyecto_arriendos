@@ -23,6 +23,9 @@ export async function GET(
       include: {
         property_images: {
           orderBy: { display_order: 'asc' }
+        },
+        property_phones: {
+          orderBy: [{ is_primary: "desc" }, { id: "asc" }]
         }
       }
     });

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { validatePhoneNumber } from "@/lib/phoneValidation";
 
 export default function PublishPage() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function PublishPage() {
   const [submitting, setSubmitting] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [error, setError] = useState("");
+  const [phoneErrors, setPhoneErrors] = useState<string[]>([""]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [uploadedImages, setUploadedImages] = useState<{url: string, public_id: string}[]>([]);
@@ -20,6 +22,7 @@ export default function PublishPage() {
     description: "",
     address: "",
     city: "Loja",
+    phones: [""],
     num_guests: 1,
     num_rooms: 1,
     num_beds: 1,
@@ -59,12 +62,63 @@ export default function PublishPage() {
     setPreviewUrls(newUrls);
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>, idx?: number) => {
+    const { name, value } = e.target;
+    if (name === "phones" && typeof idx === "number") {
+      // Validar teléfono mientras escribe
+      const validation = validatePhoneNumber(value);
+      setPhoneErrors((prev) => {
+        const copy = [...prev];
+        copy[idx] = validation.error || "";
+        return copy;
+      });
+      setFormData((prev) => ({
+        ...prev,
+        phones: prev.phones.map((p, i) => (i === idx ? value : p)),
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name.startsWith("num_") || name === "price_per_night"
+          ? (name === "price_per_night" ? value : parseInt(value) || 0)
+          : value,
+      }));
+    }
+  };
+
+  const handleAddPhone = () => {
+    if (formData.phones.length < 3) {
+      setFormData((prev) => ({ ...prev, phones: [...prev.phones, ""] }));
+      setPhoneErrors((prev) => [...prev, ""]);
+    }
+  };
+
+  const handleRemovePhone = (idx: number) => {
+    if (formData.phones.length > 1) {
+      setFormData((prev) => ({ ...prev, phones: prev.phones.filter((_, i) => i !== idx) }));
+      setPhoneErrors((prev) => prev.filter((_, i) => i !== idx));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSubmitting(true);
 
     try {
+      // Validar teléfonos
+      if (!formData.phones.length || formData.phones.some((p) => !p.trim())) {
+        setError("Debes ingresar al menos un número de celular");
+        setSubmitting(false);
+        return;
+      }
+      // Validar errores de formato
+      if (phoneErrors.some((err) => err)) {
+        setError("Corrige los errores en los números de celular");
+        setSubmitting(false);
+        return;
+      }
+
       // 1. Subir imágenes primero si hay
       let imageUrls: {url: string, public_id: string}[] = [];
       if (selectedFiles.length > 0) {
@@ -230,7 +284,7 @@ export default function PublishPage() {
               </div>
 
               {/* Ciudad */}
-              <div>
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Ciudad *
                 </label>
@@ -242,6 +296,53 @@ export default function PublishPage() {
                   className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Loja"
                 />
+              </div>
+
+              {/* Teléfonos */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Números de Celular * 📱 (máx. 3)
+                </label>
+                <div className="space-y-2">
+                  {formData.phones.map((phone, idx) => (
+                    <div key={idx} className="flex gap-2 items-center">
+                      <input
+                        type="tel"
+                        name="phones"
+                        required
+                        value={phone}
+                        onChange={(e) => handleInputChange(e, idx)}
+                        className={`w-full rounded-lg border px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 ${
+                          phoneErrors[idx]
+                            ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                            : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        }`}
+                        placeholder="Ej: 0987654321"
+                      />
+                      {formData.phones.length > 1 && (
+                        <button type="button" onClick={() => handleRemovePhone(idx)} className="text-red-500 hover:text-red-700 px-2 py-1 rounded-full border border-red-200 bg-red-50">
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {phoneErrors.map((err, idx) =>
+                    err ? (
+                      <p key={idx} className="mt-1 text-sm text-red-600">{err}</p>
+                    ) : null
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleAddPhone}
+                    disabled={formData.phones.length >= 3}
+                    className="mt-2 px-3 py-1 rounded bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 disabled:opacity-50"
+                  >
+                    + Agregar otro número
+                  </button>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Formato: 10 dígitos (ej: 0987654321). Estos números se mostrarán a los interesados en tu propiedad para que puedan contactarte.
+                  </p>
+                </div>
               </div>
             </div>
 

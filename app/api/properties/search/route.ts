@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
     
     // Extraer parámetros de búsqueda
     const city = searchParams.get('city');
+    const province = searchParams.get('province');
     const propertyType = searchParams.get('propertyType');
     const numGuests = searchParams.get('numGuests');
     const numRooms = searchParams.get('numRooms');
@@ -23,6 +24,13 @@ export async function GET(request: NextRequest) {
       is_active: true,
       deleted_at: null,
     };
+    
+    if (province) {
+      where.province = {
+        contains: province,
+        mode: 'insensitive'
+      };
+    }
     
     if (city) {
       where.city = {

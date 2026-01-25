@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { validatePhoneNumber } from "@/lib/phoneValidation";
 
 export default function EditPropertyPage() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function EditPropertyPage() {
     description: "",
     address: "",
     city: "Loja",
+    phones: [""],
     num_guests: 1,
     num_rooms: 1,
     num_beds: 1,
@@ -30,7 +32,9 @@ export default function EditPropertyPage() {
     price_per_night: "",
     property_type: "apartment",
   });
+  const [phoneErrors, setPhoneErrors] = useState<string[]>([""]);
   const [loadingProperty, setLoadingProperty] = useState(true);
+  const [phoneError, setPhoneError] = useState("");
 
   // Cargar propiedad existente
   useEffect(() => {
@@ -46,6 +50,7 @@ export default function EditPropertyPage() {
             description: property.description || "",
             address: property.address,
             city: property.city || "Loja",
+            phones: property.property_phones?.map((p: any) => p.phone_number) || [""],
             num_guests: property.num_guests || 1,
             num_rooms: property.num_rooms || 1,
             num_beds: property.num_beds || 1,
@@ -53,6 +58,7 @@ export default function EditPropertyPage() {
             price_per_night: property.price_per_night.toString(),
             property_type: property.property_type || "apartment",
           });
+          setPhoneErrors(property.property_phones?.map(() => "") || [""]);
           setExistingImages(property.property_images || []);
         } else {
           setError("No se pudo cargar la propiedad");
@@ -106,20 +112,59 @@ export default function EditPropertyPage() {
     setExistingImages(existingImages.filter(img => img.id !== imageId));
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>, idx?: number) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name.startsWith("num_") || name === "price_per_night" 
-        ? (name === "price_per_night" ? value : parseInt(value) || 0)
-        : value,
-    }));
+    if (name === "phones" && typeof idx === "number") {
+      // Validar teléfono mientras escribe
+      const validation = validatePhoneNumber(value);
+      setPhoneErrors((prev) => {
+        const copy = [...prev];
+        copy[idx] = validation.error || "";
+        return copy;
+      });
+      setFormData((prev) => ({
+        ...prev,
+        phones: prev.phones.map((p, i) => (i === idx ? value : p)),
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name.startsWith("num_") || name === "price_per_night"
+          ? (name === "price_per_night" ? value : parseInt(value) || 0)
+          : value,
+      }));
+    }
+  };
+
+  const handleAddPhone = () => {
+    if (formData.phones.length < 3) {
+      setFormData((prev) => ({ ...prev, phones: [...prev.phones, ""] }));
+      setPhoneErrors((prev) => [...prev, ""]);
+    }
+  };
+
+  const handleRemovePhone = (idx: number) => {
+    if (formData.phones.length > 1) {
+      setFormData((prev) => ({ ...prev, phones: prev.phones.filter((_, i) => i !== idx) }));
+      setPhoneErrors((prev) => prev.filter((_, i) => i !== idx));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+
+    // Validar teléfonos
+    if (!formData.phones.length || formData.phones.some((p) => !p.trim())) {
+      setError("Debes ingresar al menos un número de celular");
+      return;
+    }
+    if (phoneErrors.some((err) => err)) {
+      setError("Corrige los errores en los números de celular");
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -161,6 +206,7 @@ export default function EditPropertyPage() {
           ...formData,
           price_per_night: parseFloat(formData.price_per_night.toString()),
           images: allImages,
+          phone: formData.phone,
         }),
       });
 
@@ -181,12 +227,10 @@ export default function EditPropertyPage() {
     } catch (error) {
       console.error("Error:", error);
       setError("Error de conexión. Intenta nuevamente.");
-    } finally {
-      setSubmitting(false);
     }
   };
 
-  if (loading || loadingProperty) {
+  if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
@@ -198,63 +242,58 @@ export default function EditPropertyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12">
-      <div className="mx-auto max-w-4xl px-4">
-        {/* Header */}
-        <div className="mb-8">
-          <Link href="/my-properties" className="text-blue-600 hover:text-blue-700">
-            ← Volver a mis propiedades
-          </Link>
-          <h1 className="mt-4 text-4xl font-bold text-gray-900">
-            Editar Propiedad
-          </h1>
-          <p className="mt-2 text-gray-600">
-            Actualiza los datos de tu propiedad
-          </p>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12">
+        <div className="mx-auto max-w-4xl px-4">
+          {/* Header */}
+          <div className="mb-8">
+            <Link href="/my-properties" className="text-blue-600 hover:text-blue-700">
+              ← Volver a mis propiedades
+            </Link>
+            <h1 className="mt-4 text-4xl font-bold text-gray-900">
+              Editar Propiedad
+            </h1>
+            <p className="mt-2 text-gray-600">
+              Modifica los datos de tu propiedad y guarda los cambios
+            </p>
+          </div>
 
-        {/* Formulario */}
-        <div className="rounded-2xl bg-white p-8 shadow-xl">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Error */}
-            {error && (
-              <div className="rounded-lg bg-red-50 p-4 text-red-800">
-                {error}
-              </div>
-            )}
+          {/* Formulario */}
+          <div className="rounded-2xl bg-white p-8 shadow-xl">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Error */}
+              {error && (
+                <div className="rounded-lg bg-red-50 border border-red-200 p-4">
+                  <p className="text-sm text-red-600">{error}</p>
+                </div>
+              )}
 
-            {/* Success */}
-            {success && (
-              <div className="rounded-lg bg-green-50 p-4 text-green-800">
-                {success}
-              </div>
-            )}
-
-            {/* Información Básica */}
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-900">Información Básica</h2>
+              {/* Información básica */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  Información Básica
+                </h2>
               
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Título de la propiedad *
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Ej: Hermoso departamento en el centro"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Título de la propiedad *
+                  </label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ej: Hermoso departamento en el centro"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Descripción *
-                </label>
-                <textarea
-                  name="description"
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Descripción *
+                  </label>
+                  <textarea
+                    name="description"
                   value={formData.description}
                   onChange={handleInputChange}
                   required
@@ -313,7 +352,52 @@ export default function EditPropertyPage() {
                   </select>
                 </div>
               </div>
-            </div>
+              </div>
+
+              {/* Números de Celular */}
+              <div className="border-b border-gray-200 pb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Números de Celular (máx. 3)</h2>
+                <div className="space-y-2">
+                  {formData.phones.map((phone, idx) => (
+                    <div key={idx} className="flex gap-2 items-center">
+                      <input
+                        type="tel"
+                        name="phones"
+                        required
+                        value={phone}
+                        onChange={(e) => handleInputChange(e, idx)}
+                        className={`w-full rounded-lg border px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 ${
+                          phoneErrors[idx]
+                            ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                            : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        }`}
+                        placeholder="Ej: 0987654321"
+                      />
+                      {formData.phones.length > 1 && (
+                        <button type="button" onClick={() => handleRemovePhone(idx)} className="text-red-500 hover:text-red-700 px-2 py-1 rounded-full border border-red-200 bg-red-50">
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {phoneErrors.map((err, idx) =>
+                    err ? (
+                      <p key={idx} className="mt-1 text-sm text-red-600">{err}</p>
+                    ) : null
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleAddPhone}
+                    disabled={formData.phones.length >= 3}
+                    className="mt-2 px-3 py-1 rounded bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 disabled:opacity-50"
+                  >
+                    + Agregar otro número
+                  </button>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Formato: 10 dígitos (ej: 0987654321). Estos números se mostrarán a los interesados en tu propiedad para que puedan contactarte.
+                  </p>
+                </div>
+              </div>
 
             {/* Detalles de Hospedaje */}
             <div className="space-y-4">
