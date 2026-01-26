@@ -160,8 +160,7 @@ export const authOptions: AuthOptions = {
   },
   
   secret: process.env.NEXTAUTH_SECRET,
-  
-  trustHost: true,
+
 }
 
 const handler = NextAuth(authOptions)
