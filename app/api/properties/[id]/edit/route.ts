@@ -96,7 +96,7 @@ export async function PUT(
         title,
         description,
         address,
-        city: city || "Loja",
+        city: city || "Sin especificar",
         num_guests: num_guests || 1,
         num_rooms: num_rooms || 1,
         num_beds: num_beds || 1,

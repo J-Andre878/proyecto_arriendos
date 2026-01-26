@@ -44,15 +44,15 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   const otherImages = property.property_images.filter((img: typeof property.property_images[0]) => !img.is_main);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900/50">
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Título */}
         <div className="mb-6 flex items-start justify-between">
           <div className="flex-1">
-            <h1 className="text-4xl font-bold text-gray-900">{property.title}</h1>
-            <p className="mt-2 text-lg text-gray-600">
+            <h1 className="text-4xl font-bold text-white">{property.title}</h1>
+            <p className="mt-2 text-lg text-gray-300">
               📍 {property.city}
             </p>
           </div>
@@ -69,52 +69,52 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           {/* Columna izquierda - Detalles */}
           <div className="lg:col-span-2">
             {/* Información básica */}
-            <div className="rounded-lg bg-white p-6 shadow-md mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <div className="rounded-lg bg-white/10 p-6 shadow-md mb-6">
+              <h2 className="text-2xl font-bold text-white mb-4\">
                 {property.property_type === "apartment" ? "Apartamento" : 
                  property.property_type === "house" ? "Casa" : 
                  property.property_type}
               </h2>
 
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4 bg-gradient-to-br from-blue-50 to-blue-100">
+                <div className="flex flex-col items-center rounded-lg border border-purple-500/30 p-4 bg-gradient-to-br from-purple-950 to-purple-900">
                   <span className="text-3xl">👥</span>
-                  <span className="mt-2 text-base font-bold text-gray-700">Huéspedes</span>
-                  <span className="text-2xl font-bold text-gray-900">{property.num_guests}</span>
+                  <span className="mt-2 text-base font-bold text-gray-300">Huéspedes</span>
+                  <span className="text-2xl font-bold text-white">{property.num_guests}</span>
                 </div>
-                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4 bg-gradient-to-br from-green-50 to-green-100">
+                <div className="flex flex-col items-center rounded-lg border border-green-500/30 p-4 bg-gradient-to-br from-green-950 to-green-900">
                   <span className="text-3xl">🛏️</span>
-                  <span className="mt-2 text-base font-bold text-gray-700">Habitaciones</span>
-                  <span className="text-2xl font-bold text-gray-900">{property.num_rooms}</span>
+                  <span className="mt-2 text-base font-bold text-gray-300">Habitaciones</span>
+                  <span className="text-2xl font-bold text-white">{property.num_rooms}</span>
                 </div>
-                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4 bg-gradient-to-br from-purple-50 to-purple-100">
+                <div className="flex flex-col items-center rounded-lg border border-purple-500/30 p-4 bg-gradient-to-br from-purple-950 to-purple-900">
                   <span className="text-3xl">🛌</span>
-                  <span className="mt-2 text-base font-bold text-gray-700">Camas</span>
-                  <span className="text-2xl font-bold text-gray-900">{property.num_beds}</span>
+                  <span className="mt-2 text-base font-bold text-gray-300">Camas</span>
+                  <span className="text-2xl font-bold text-white">{property.num_beds}</span>
                 </div>
-                <div className="flex flex-col items-center rounded-lg border border-gray-200 p-4 bg-gradient-to-br from-orange-50 to-orange-100">
+                <div className="flex flex-col items-center rounded-lg border border-orange-500/30 p-4 bg-gradient-to-br from-orange-950 to-orange-900">
                   <span className="text-3xl">🚿</span>
-                  <span className="mt-2 text-base font-bold text-gray-700">Baños</span>
-                  <span className="text-2xl font-bold text-gray-900">{property.num_bathrooms}</span>
+                  <span className="mt-2 text-base font-bold text-gray-300">Baños</span>
+                  <span className="text-2xl font-bold text-white">{property.num_bathrooms}</span>
                 </div>
               </div>
             </div>
 
             {/* Descripción */}
-            <div className="rounded-lg bg-white p-6 shadow-md mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Descripción</h2>
-              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+            <div className="rounded-lg bg-white/10 p-6 shadow-md mb-6\">
+              <h2 className="text-2xl font-bold text-white mb-4">Descripción</h2>
+              <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
                 {property.description || "Sin descripción disponible."}
               </p>
             </div>
 
             {/* Ubicación */}
-            <div className="rounded-lg bg-white p-6 shadow-md">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Ubicación</h2>
-              <p className="text-gray-700">
+            <div className="rounded-lg bg-white/10 p-6 shadow-md">
+              <h2 className="text-2xl font-bold text-white mb-4">Ubicación</h2>
+              <p className="text-gray-300">
                 <span className="font-semibold">Dirección:</span> {property.address}
               </p>
-              <p className="mt-2 text-gray-700">
+              <p className="mt-2 text-gray-300">
                 <span className="font-semibold">Ciudad:</span> {property.city}
               </p>
             </div>
@@ -123,20 +123,20 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           {/* Columna derecha - Información de contacto */}
           <div className="lg:col-span-1">
             {/* Card de contacto */}
-            <div className="rounded-lg bg-white p-6 shadow-lg border-2 border-blue-200">
+            <div className="rounded-lg bg-white/10 p-6 shadow-lg border-2 border-purple-500/30">
               <div className="mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                <h3 className="text-2xl font-bold text-white mb-2">
                   ${property.price_per_night.toString()}
                 </h3>
-                <p className="text-gray-600">por noche</p>
+                <p className="text-gray-300">por noche</p>
               </div>
 
               {/* Teléfonos de contacto */}
               {property.property_phones && property.property_phones.length > 0 && (
                 <div className="space-y-2 mb-3">
                   {property.property_phones.map((phoneObj, idx) => (
-                    <div key={phoneObj.id} className="flex flex-col gap-1 border border-blue-100 rounded-lg p-2 bg-blue-50">
-                      <span className="text-xs text-blue-600 font-semibold">
+                    <div key={phoneObj.id} className="flex flex-col gap-1 border border-purple-500/30 rounded-lg p-2 bg-purple-950/50">
+                      <span className="text-xs text-purple-400 font-semibold">
                         {phoneObj.is_primary ? "Teléfono principal" : `Teléfono ${idx + 1}`}
                       </span>
                       <div className="flex gap-2">
@@ -155,7 +155,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                           💬 WhatsApp
                         </a>
                       </div>
-                      <span className="text-blue-900 font-mono text-sm text-center">{phoneObj.phone_number}</span>
+                      <span className="text-purple-300 font-mono text-sm text-center">{phoneObj.phone_number}</span>
                     </div>
                   ))}
                 </div>
@@ -165,20 +165,20 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               {property.users.email && (
                 <a 
                   href={`mailto:${property.users.email}?subject=Consulta sobre: ${property.title}`}
-                  className="flex items-center justify-center w-full rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 py-3 px-4 text-white font-semibold hover:from-blue-700 hover:to-indigo-700 transition"
+                  className="flex items-center justify-center w-full rounded-lg bg-gradient-to-r from-purple-600 to-purple-500 py-3 px-4 text-white font-semibold hover:from-purple-700 hover:to-purple-600 transition"
                 >
                   ✉️ Enviar Email
                 </a>
               )}
 
-              <p className="mt-4 text-center text-sm text-gray-600 bg-blue-50 p-3 rounded">
+              <p className="mt-4 text-center text-sm text-gray-300 bg-purple-950/50 p-3 rounded">
                 ℹ️ Contacta directamente con el propietario para conocer disponibilidad y detalles.
               </p>
             </div>
 
             {/* Información del host */}
-            <div className="mt-6 rounded-lg bg-white p-6 shadow-md">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Anfitrión</h3>
+            <div className="mt-6 rounded-lg bg-white/10 p-6 shadow-md">
+              <h3 className="text-xl font-bold text-white mb-4">Anfitrión</h3>
               <div className="flex items-center">
                 {property.users.avatar_url ? (
                   <div className="relative h-16 w-16 overflow-hidden rounded-full">
@@ -190,13 +190,13 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                     />
                   </div>
                 ) : (
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-white text-2xl font-bold">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-purple-600 text-white text-2xl font-bold">
                     {property.users.name?.charAt(0).toUpperCase() || "A"}
                   </div>
                 )}
                 <div className="ml-4">
-                  <p className="font-semibold text-gray-900">{property.users.name}</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="font-semibold text-white">{property.users.name}</p>
+                  <p className="text-sm text-gray-300">
                     Miembro desde{" "}
                     {property.users.created_at
                       ? new Date(property.users.created_at).getFullYear()
@@ -208,11 +208,11 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               {/* Información de contacto */}
               <div className="mt-4 space-y-3">
                 {property.users.email && (
-                  <div className="flex items-center rounded-lg bg-gray-50 p-3">
+                  <div className="flex items-center rounded-lg bg-gray-800/50 p-3">
                     <span className="mr-3 text-lg">✉️</span>
                     <div>
-                      <p className="text-xs text-gray-600">Email</p>
-                      <p className="font-medium text-gray-900">{property.users.email}</p>
+                      <p className="text-xs text-gray-400">Email</p>
+                      <p className="font-medium text-white">{property.users.email}</p>
                     </div>
                   </div>
                 )}
@@ -220,15 +220,15 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 {property.property_phones && property.property_phones.length > 0 && (
                   <div className="space-y-2">
                     {property.property_phones.map((phoneObj, idx) => (
-                      <div key={phoneObj.id} className="flex items-center rounded-lg bg-blue-50 p-3 border border-blue-200">
+                      <div key={phoneObj.id} className="flex items-center rounded-lg bg-purple-950/50 p-3 border border-purple-500/30">
                         <span className="mr-3 text-lg">📱</span>
                         <div>
-                          <p className="text-xs text-blue-600 font-semibold">
+                          <p className="text-xs text-purple-400 font-semibold">
                             {phoneObj.is_primary ? "Teléfono principal" : `Teléfono ${idx + 1}`}
                           </p>
                           <a
                             href={`tel:${phoneObj.phone_number}`}
-                            className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                            className="font-medium text-purple-400 hover:text-purple-300 hover:underline"
                           >
                             {phoneObj.phone_number}
                           </a>
@@ -243,8 +243,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
         </div>
 
         {/* Aviso legal */}
-        <div className="mt-12 rounded-lg bg-blue-50 border border-blue-200 p-6">
-          <p className="text-sm text-blue-800">
+        <div className="mt-12 rounded-lg bg-purple-950/50 border border-purple-500/30 p-6">
+          <p className="text-sm text-purple-300">
             ℹ️ <strong>Información importante:</strong> Esta plataforma conecta a propietarios e interesados. 
             Puedes contactar directamente al propietario usando los números de teléfono o email disponibles. 
             Asegúrate de acordar los términos directamente con el anfitrión.

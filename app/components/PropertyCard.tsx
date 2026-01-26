@@ -32,7 +32,7 @@ export default function PropertyCard({
   return (
     <Link
       href={`/property/${id}`}
-      className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:shadow-2xl"
+      className="group flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-md dark:shadow-lg transition-all hover:shadow-2xl dark:hover:shadow-purple-500/20"
     >
       {/* Imagen principal */}
       <div className="relative h-72 w-full overflow-hidden bg-gray-200">
@@ -50,9 +50,9 @@ export default function PropertyCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200">
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-100 to-cyan-100">
             <svg
-              className="h-20 w-20 text-blue-300"
+              className="h-20 w-20 text-purple-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -79,24 +79,24 @@ export default function PropertyCard({
       <div className="flex flex-1 flex-col p-5">
         {/* Ubicación y título */}
         <div className="mb-2">
-          <p className="text-sm font-medium text-gray-500">{city || "Loja"}</p>
-          <h3 className="mt-1 line-clamp-2 text-xl font-bold text-gray-900">
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{city || "Sin especificar"}</p>
+          <h3 className="mt-1 line-clamp-2 text-xl font-bold text-gray-900 dark:text-white">
             {title}
           </h3>
         </div>
 
         {/* Descripción */}
         {description && (
-          <p className="mb-4 line-clamp-2 text-sm text-gray-600">
+          <p className="mb-4 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
             {description}
           </p>
         )}
 
         {/* Características */}
-        <div className="mb-4 flex flex-wrap gap-3 text-sm text-gray-600">
+        <div className="mb-4 flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-400">
           <div className="flex items-center gap-1">
             <svg
-              className="h-5 w-5 text-gray-400"
+              className="h-5 w-5 text-gray-400 dark:text-gray-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -144,7 +144,7 @@ export default function PropertyCard({
           </div>
           <div className="flex items-center gap-1">
             <svg
-              className="h-5 w-5 text-gray-400"
+              className="h-5 w-5 text-gray-400 dark:text-gray-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -161,14 +161,14 @@ export default function PropertyCard({
         </div>
 
         {/* Precio */}
-        <div className="mt-auto flex items-end justify-between border-t border-gray-100 pt-4">
+        <div className="mt-auto flex items-end justify-between border-t border-gray-100 dark:border-gray-700 pt-4">
           <div>
-            <p className="text-2xl font-bold text-blue-600">
+            <p className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-violet-400 dark:to-cyan-300 bg-clip-text text-transparent">
               ${parseFloat(price_per_night.toString()).toFixed(2)}
             </p>
-            <p className="text-sm text-gray-500">por noche</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">por noche</p>
           </div>
-          <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700">
+          <button className="rounded-lg bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-violet-500 dark:to-cyan-400 px-4 py-2 text-sm font-semibold text-white transition-all hover:shadow-lg">
             Ver detalles
           </button>
         </div>

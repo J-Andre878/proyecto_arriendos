@@ -82,7 +82,7 @@ export async function POST(request: Request) {
         application_context: {
           return_url: `${process.env.NEXTAUTH_URL}/publish/${propertyId}/success`,
           cancel_url: `${process.env.NEXTAUTH_URL}/publish/${propertyId}/payment?canceled=true`,
-          brand_name: "Arriendos Loja",
+          brand_name: "Havela",
           user_action: "PAY_NOW",
         },
       },

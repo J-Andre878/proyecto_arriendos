@@ -206,7 +206,7 @@ export default function EditPropertyPage() {
           ...formData,
           price_per_night: parseFloat(formData.price_per_night.toString()),
           images: allImages,
-          phone: formData.phone,
+          phone: formData.phones,
         }),
       });
 
@@ -234,47 +234,47 @@ export default function EditPropertyPage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent mx-auto"></div>
-          <p className="mt-4 text-gray-600">Cargando...</p>
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-gray-400">Cargando...</p>
         </div>
       </div>
     );
   }
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-12">
         <div className="mx-auto max-w-4xl px-4">
           {/* Header */}
           <div className="mb-8">
-            <Link href="/my-properties" className="text-blue-600 hover:text-blue-700">
+            <Link href="/my-properties" className="text-purple-400 hover:text-purple-300">
               ← Volver a mis propiedades
             </Link>
-            <h1 className="mt-4 text-4xl font-bold text-gray-900">
+            <h1 className="mt-4 text-4xl font-bold text-white">
               Editar Propiedad
             </h1>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-gray-400">
               Modifica los datos de tu propiedad y guarda los cambios
             </p>
           </div>
 
           {/* Formulario */}
-          <div className="rounded-2xl bg-white p-8 shadow-xl">
+          <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-8 shadow-xl">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Error */}
               {error && (
-                <div className="rounded-lg bg-red-50 border border-red-200 p-4">
-                  <p className="text-sm text-red-600">{error}</p>
+                <div className="rounded-lg bg-red-950/50 border border-red-500/50 p-4">
+                  <p className="text-sm text-red-400">{error}</p>
                 </div>
               )}
 
               {/* Información básica */}
               <div className="space-y-4">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                <h2 className="text-2xl font-bold text-white mb-4">
                   Información Básica
                 </h2>
               
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Título de la propiedad *
                   </label>
                   <input
@@ -283,13 +283,13 @@ export default function EditPropertyPage() {
                     value={formData.title}
                     onChange={handleInputChange}
                     required
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
                     placeholder="Ej: Hermoso departamento en el centro"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Descripción *
                   </label>
                   <textarea
@@ -298,13 +298,13 @@ export default function EditPropertyPage() {
                   onChange={handleInputChange}
                   required
                   rows={5}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
                   placeholder="Describe tu propiedad en detalle..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-300 mb-1">
                   Dirección *
                 </label>
                 <input
@@ -313,21 +313,21 @@ export default function EditPropertyPage() {
                   value={formData.address}
                   onChange={handleInputChange}
                   required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
                   placeholder="Ej: Calle Principal 123"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Ciudad *
                   </label>
                   <select
                     name="city"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
                   >
                     <option value="Loja">Loja</option>
                     <option value="Quito">Quito</option>
@@ -336,14 +336,14 @@ export default function EditPropertyPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Tipo de propiedad *
                   </label>
                   <select
                     name="property_type"
                     value={formData.property_type}
                     onChange={handleInputChange}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
                   >
                     <option value="apartment">Departamento</option>
                     <option value="house">Casa</option>
@@ -355,8 +355,8 @@ export default function EditPropertyPage() {
               </div>
 
               {/* Números de Celular */}
-              <div className="border-b border-gray-200 pb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Números de Celular (máx. 3)</h2>
+              <div className="border-b border-purple-500/30 pb-6">
+                <h2 className="text-2xl font-bold text-white mb-4">Números de Celular (máx. 3)</h2>
                 <div className="space-y-2">
                   {formData.phones.map((phone, idx) => (
                     <div key={idx} className="flex gap-2 items-center">
@@ -366,15 +366,15 @@ export default function EditPropertyPage() {
                         required
                         value={phone}
                         onChange={(e) => handleInputChange(e, idx)}
-                        className={`w-full rounded-lg border px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 ${
+                        className={`w-full rounded-lg border px-4 py-3 text-white bg-white/10 focus:outline-none focus:ring-2 ${
                           phoneErrors[idx]
-                            ? "border-red-300 focus:border-red-500 focus:ring-red-500"
-                            : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                            ? "border-red-500/50 focus:border-red-400 focus:ring-red-500/50"
+                            : "border-purple-500/50 focus:border-purple-400 focus:ring-purple-500/50"
                         }`}
                         placeholder="Ej: 0987654321"
                       />
                       {formData.phones.length > 1 && (
-                        <button type="button" onClick={() => handleRemovePhone(idx)} className="text-red-500 hover:text-red-700 px-2 py-1 rounded-full border border-red-200 bg-red-50">
+                        <button type="button" onClick={() => handleRemovePhone(idx)} className="text-red-400 hover:text-red-300 px-2 py-1 rounded-full border border-red-500/50 bg-red-950/50">
                           ✕
                         </button>
                       )}
@@ -382,14 +382,14 @@ export default function EditPropertyPage() {
                   ))}
                   {phoneErrors.map((err, idx) =>
                     err ? (
-                      <p key={idx} className="mt-1 text-sm text-red-600">{err}</p>
+                      <p key={idx} className="mt-1 text-sm text-red-400">{err}</p>
                     ) : null
                   )}
                   <button
                     type="button"
                     onClick={handleAddPhone}
                     disabled={formData.phones.length >= 3}
-                    className="mt-2 px-3 py-1 rounded bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 disabled:opacity-50"
+                    className="mt-2 px-3 py-1 rounded bg-purple-950/50 text-purple-300 font-semibold hover:bg-purple-900/50 disabled:opacity-50 border border-purple-500/50"
                   >
                     + Agregar otro número
                   </button>
@@ -401,11 +401,11 @@ export default function EditPropertyPage() {
 
             {/* Detalles de Hospedaje */}
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-900">Detalles de Hospedaje</h2>
+              <h2 className="text-xl font-semibold text-white">Detalles de Hospedaje</h2>
               
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Huéspedes máx.
                   </label>
                   <input
@@ -414,11 +414,11 @@ export default function EditPropertyPage() {
                     value={formData.num_guests}
                     onChange={handleInputChange}
                     min="1"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white bg-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Habitaciones
                   </label>
                   <input
@@ -427,11 +427,11 @@ export default function EditPropertyPage() {
                     value={formData.num_rooms}
                     onChange={handleInputChange}
                     min="1"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white bg-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Camas
                   </label>
                   <input
@@ -440,11 +440,11 @@ export default function EditPropertyPage() {
                     value={formData.num_beds}
                     onChange={handleInputChange}
                     min="1"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white bg-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Baños
                   </label>
                   <input
@@ -453,13 +453,13 @@ export default function EditPropertyPage() {
                     value={formData.num_bathrooms}
                     onChange={handleInputChange}
                     min="1"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white bg-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-300 mb-1">
                   Precio por noche (USD) *
                 </label>
                 <input
@@ -470,7 +470,7 @@ export default function EditPropertyPage() {
                   step="0.01"
                   min="0"
                   required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white placeholder-gray-500 bg-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                   placeholder="Ej: 50.00"
                 />
               </div>
@@ -478,12 +478,12 @@ export default function EditPropertyPage() {
 
             {/* Imágenes */}
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-900">Imágenes</h2>
+              <h2 className="text-xl font-semibold text-white">Imágenes</h2>
               
               {/* Imágenes existentes */}
               {existingImages.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-3">Imágenes actuales</h3>
+                  <h3 className="text-sm font-medium text-gray-300 mb-3">Imágenes actuales</h3>
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                     {existingImages.map((image) => (
                       <div key={image.id} className="relative group">
@@ -507,12 +507,12 @@ export default function EditPropertyPage() {
 
               {/* Subir nuevas imágenes */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Añadir más imágenes ({selectedFiles.length} nuevas)
                 </label>
-                <label className="flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-blue-300 bg-blue-50 p-8 transition-colors hover:border-blue-500 hover:bg-blue-100">
+                <label className="flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-purple-500/50 bg-purple-950/50 p-8 transition-colors hover:border-purple-400 hover:bg-purple-900/50">
                   <div className="text-center">
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm font-medium text-gray-300">
                       Arrastra imágenes aquí o haz clic para seleccionar
                     </p>
                     <p className="mt-1 text-xs text-gray-500">
@@ -532,7 +532,7 @@ export default function EditPropertyPage() {
               {/* Preview de nuevas imágenes */}
               {previewUrls.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-3">Nuevas imágenes</h3>
+                  <h3 className="text-sm font-medium text-gray-300 mb-3">Nuevas imágenes</h3>
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                     {previewUrls.map((url, index) => (
                       <div key={index} className="relative group">
@@ -560,13 +560,13 @@ export default function EditPropertyPage() {
               <button
                 type="submit"
                 disabled={submitting || uploadingImages}
-                className="flex-1 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-700 disabled:bg-gray-400"
+                className="flex-1 rounded-lg bg-gradient-to-r from-purple-600 to-cyan-500 px-6 py-3 font-semibold text-white transition-colors hover:from-purple-700 hover:to-cyan-600 disabled:opacity-50"
               >
                 {submitting ? "Guardando..." : "Guardar Cambios"}
               </button>
               <Link
                 href="/my-properties"
-                className="flex-1 rounded-lg border border-gray-300 px-6 py-3 text-center font-semibold text-gray-900 transition-colors hover:bg-gray-50"
+                className="flex-1 rounded-lg border border-purple-500/50 px-6 py-3 text-center font-semibold text-gray-300 transition-colors hover:bg-white/10"
               >
                 Cancelar
               </Link>

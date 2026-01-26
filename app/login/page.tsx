@@ -41,29 +41,29 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-gray-900/50 px-4 py-12">
       <div className="w-full max-w-md">
         {/* Logo/Título */}
         <div className="mb-8 text-center">
           <Link href="/" className="inline-block">
-            <h1 className="text-4xl font-bold text-blue-600">Arriendos Loja</h1>
+            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-cyan-300">Havela</h1>
           </Link>
-          <p className="mt-2 text-gray-600">Inicia sesión en tu cuenta</p>
+          <p className="mt-2 text-gray-400">Inicia sesión en tu cuenta</p>
         </div>
 
         {/* Formulario */}
-        <div className="rounded-2xl bg-white p-8 shadow-xl">
+        <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-8 shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Error */}
             {error && (
-              <div className="rounded-lg bg-red-50 border border-red-200 p-4">
-                <p className="text-sm text-red-600">{error}</p>
+              <div className="rounded-lg bg-red-950/50 border border-red-500/50 p-4">
+                <p className="text-sm text-red-300">{error}</p>
               </div>
             )}
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                 Email
               </label>
               <input
@@ -72,14 +72,14 @@ export default function LoginPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="mt-1 block w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white placeholder-gray-500 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                 placeholder="tu@email.com"
               />
             </div>
 
             {/* Contraseña */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300">
                 Contraseña
               </label>
               <input
@@ -88,7 +88,7 @@ export default function LoginPage() {
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="mt-1 block w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white placeholder-gray-500 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                 placeholder="••••••••"
               />
             </div>
@@ -97,7 +97,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="w-full rounded-lg bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-3 font-semibold text-white transition-colors hover:from-purple-700 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
             </button>
@@ -106,10 +106,10 @@ export default function LoginPage() {
           {/* Divisor */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
+              <div className="w-full border-t border-purple-500/30"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-4 text-gray-500">O continuar con</span>
+              <span className="bg-white/10 px-4 text-gray-400">O continuar con</span>
             </div>
           </div>
 
@@ -117,7 +117,7 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => signIn("google", { callbackUrl: "/" })}
-            className="w-full flex items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+            className="w-full flex items-center justify-center gap-3 rounded-lg border border-purple-500/50 bg-white/10 px-4 py-3 font-semibold text-gray-300 transition-colors hover:bg-white/20"
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
@@ -142,9 +142,9 @@ export default function LoginPage() {
 
           {/* Link a registro */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-400">
               ¿No tienes cuenta?{" "}
-              <Link href="/register" className="font-semibold text-blue-600 hover:text-blue-700">
+              <Link href="/register" className="font-semibold text-purple-400 hover:text-purple-300">
                 Regístrate aquí
               </Link>
             </p>
@@ -153,7 +153,7 @@ export default function LoginPage() {
 
         {/* Volver al inicio */}
         <div className="mt-6 text-center">
-          <Link href="/" className="text-sm text-gray-600 hover:text-gray-900">
+          <Link href="/" className="text-sm text-gray-400 hover:text-gray-200">
             ← Volver al inicio
           </Link>
         </div>

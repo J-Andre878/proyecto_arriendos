@@ -51,16 +51,19 @@ export async function POST(request: Request) {
     // Hash de la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Obtener el rol de usuario (user)
-    const userRole = await prisma.roles.findUnique({
+    // Obtener el rol de usuario (user), o crearlo si no existe
+    let userRole = await prisma.roles.findUnique({
       where: { name: "user" },
     });
 
     if (!userRole) {
-      return NextResponse.json(
-        { success: false, error: "Error en la configuración del sistema" },
-        { status: 500 }
-      );
+      // Crear el rol si no existe
+      userRole = await prisma.roles.create({
+        data: {
+          name: "user",
+          description: "Usuario normal",
+        },
+      });
     }
 
     // Crear usuario

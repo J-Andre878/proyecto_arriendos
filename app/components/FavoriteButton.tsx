@@ -104,15 +104,15 @@ export default function FavoriteButton({
     <button
       onClick={handleToggleFavorite}
       disabled={isLoading}
-      className={`group flex items-center justify-center rounded-full bg-white/90 p-2 shadow-lg transition-all hover:scale-110 hover:bg-white disabled:opacity-50 ${className}`}
+      className={`group flex items-center justify-center rounded-full bg-white/95 p-2.5 shadow-lg transition-all hover:scale-110 hover:bg-white disabled:opacity-50 ${className}`}
       title={isFavorite ? "Quitar de guardados" : "Guardar propiedad"}
     >
       {/* Ícono de bookmark/guardado */}
       <svg
-        className={`h-6 w-6 transition-colors ${
+        className={`h-6 w-6 transition-all ${
           isFavorite
-            ? "fill-blue-600 text-blue-600"
-            : "fill-none text-gray-700 group-hover:text-blue-600"
+            ? "fill-purple-600 text-purple-600 drop-shadow-md"
+            : "fill-none text-gray-700 group-hover:text-purple-600"
         }`}
         stroke="currentColor"
         strokeWidth="2"

@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Arriendos Loja - Encuentra tu alojamiento perfecto",
-  description: "Plataforma de arriendos en Loja. Descubre espacios únicos para tus vacaciones o estadías temporales.",
+  title: "Havela - Tu plataforma de alojamientos",
+  description: "Havela es tu plataforma de confianza para encontrar alojamientos únicos. Descubre espacios perfectos para tus vacaciones o estadías.",
 };
 
 export default function RootLayout({
@@ -24,9 +24,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es" suppressHydrationWarning className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-950 transition-colors duration-300`}
       >
         <Providers>
           {children}

@@ -43,42 +43,42 @@ export default function SearchBar() {
   };
 
   return (
-    <form onSubmit={handleSearch} className="mx-auto mt-10 max-w-4xl">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 rounded-2xl bg-white p-6 shadow-2xl">
+    <form onSubmit={handleSearch} className="mx-auto mt-8 w-full px-4">
+      <div className="flex items-end gap-1.5 rounded-2xl bg-white/95 dark:bg-gray-800/95 backdrop-blur p-3 shadow-xl dark:shadow-2xl border border-purple-100 dark:border-purple-900">
         {/* Provincia */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Provincia</label>
+        <div className="flex-1 min-w-[70px]">
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Provincia</label>
           <input
             type="text"
             name="province"
-            placeholder="Ej: Loja"
+            placeholder="Ej: Pichincha"
             value={filters.province}
             onChange={handleFilterChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-1.5 py-1.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400"
           />
         </div>
 
         {/* Ciudad */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
+        <div className="flex-1 min-w-[70px]">
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Ciudad</label>
           <input
             type="text"
             name="city"
-            placeholder="Ej: Loja"
+            placeholder="Ej: Quito"
             value={filters.city}
             onChange={handleFilterChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-1.5 py-1.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400"
           />
         </div>
 
         {/* Tipo de propiedad */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de propiedad</label>
+        <div className="flex-1 min-w-[70px]">
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Tipo</label>
           <select
             name="propertyType"
             value={filters.propertyType}
             onChange={handleFilterChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-1.5 py-1.5 text-xs text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400"
           >
             <option value="">Todos</option>
             <option value="apartment">Departamento</option>
@@ -91,86 +91,84 @@ export default function SearchBar() {
         </div>
 
         {/* Número de habitaciones */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Habitaciones</label>
+        <div className="flex-1 min-w-[60px]">
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Hab.</label>
           <input
             type="number"
             name="numRooms"
             min="1"
-            placeholder="Ej: 2"
+            placeholder="2"
             value={filters.numRooms}
             onChange={handleFilterChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-1.5 py-1.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400"
           />
         </div>
 
         {/* Número de camas */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Camas</label>
+        <div className="flex-1 min-w-[60px]">
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Camas</label>
           <input
             type="number"
             name="numBeds"
             min="1"
-            placeholder="Ej: 2"
+            placeholder="2"
             value={filters.numBeds}
             onChange={handleFilterChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-1.5 py-1.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400"
           />
         </div>
 
         {/* Capacidad de huéspedes */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Huéspedes</label>
+        <div className="flex-1 min-w-[60px]">
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">Huésp.</label>
           <input
             type="number"
             name="numGuests"
             min="1"
-            placeholder="Ej: 4"
+            placeholder="4"
             value={filters.numGuests}
             onChange={handleFilterChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-1.5 py-1.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400"
           />
         </div>
 
         {/* Precio mínimo */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Precio mínimo</label>
+        <div className="flex-1 min-w-[60px]">
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">P. Min</label>
           <input
             type="number"
             name="minPrice"
             min="0"
             step="0.01"
-            placeholder="$ Min"
+            placeholder="$"
             value={filters.minPrice}
             onChange={handleFilterChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-1.5 py-1.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400"
           />
         </div>
 
         {/* Precio máximo */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Precio máximo</label>
+        <div className="flex-1 min-w-[60px]">
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5">P. Max</label>
           <input
             type="number"
             name="maxPrice"
             min="0"
             step="0.01"
-            placeholder="$ Max"
+            placeholder="$"
             value={filters.maxPrice}
             onChange={handleFilterChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-1.5 py-1.5 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400"
           />
         </div>
 
         {/* Botón Buscar */}
-        <div className="flex items-end">
-          <button
-            type="submit"
-            className="w-full rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
-          >
-            🔍 Buscar
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="flex-1 min-w-[70px] rounded-lg bg-gradient-to-r from-purple-600 via-violet-600 to-cyan-500 dark:from-violet-500 dark:via-purple-500 dark:to-cyan-400 px-3 py-1.5 text-xs font-semibold text-white transition-all hover:shadow-lg dark:hover:shadow-purple-500/50 h-fit whitespace-nowrap"
+        >
+          🔍 Buscar
+        </button>
       </div>
     </form>
   );

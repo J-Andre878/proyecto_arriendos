@@ -82,8 +82,8 @@ export default function PaymentPage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent mx-auto"></div>
-          <p className="mt-4 text-gray-600">Cargando...</p>
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-400 border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-gray-400">Cargando...</p>
         </div>
       </div>
     );
@@ -93,10 +93,10 @@ export default function PaymentPage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Propiedad no encontrada</h1>
+          <h1 className="text-2xl font-bold text-white">Propiedad no encontrada</h1>
           <button
             onClick={() => router.push("/")}
-            className="mt-4 text-blue-600 hover:underline"
+            className="mt-4 text-purple-400 hover:underline"
           >
             Volver al inicio
           </button>
@@ -106,70 +106,70 @@ export default function PaymentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-900/50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-white">
             Completa tu Publicación
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-gray-400">
             Tu propiedad está casi lista. Solo falta el pago para activarla.
           </p>
         </div>
 
         {/* Mensaje de cancelación */}
         {canceled && (
-          <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <p className="text-yellow-800">
+          <div className="mb-6 bg-yellow-950/50 border border-yellow-500/50 rounded-lg p-4">
+            <p className="text-yellow-300">
               El pago fue cancelado. Puedes intentarlo de nuevo cuando estés listo.
             </p>
           </div>
         )}
 
         {/* Resumen de la propiedad */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg shadow-lg p-6 mb-6">
+          <h2 className="text-xl font-bold text-white mb-4">
             Resumen de tu Publicación
           </h2>
           
           <div className="space-y-3">
             <div>
               <p className="text-sm text-gray-500">Título</p>
-              <p className="font-medium text-gray-900">{property.title}</p>
+              <p className="font-medium text-white">{property.title}</p>
             </div>
             
             <div>
               <p className="text-sm text-gray-500">Ubicación</p>
-              <p className="font-medium text-gray-900">{property.city}</p>
+              <p className="font-medium text-white">{property.city}</p>
             </div>
             
             <div>
               <p className="text-sm text-gray-500">Precio por noche</p>
-              <p className="font-medium text-gray-900">${property.price_per_night}</p>
+              <p className="font-medium text-white">${property.price_per_night}</p>
             </div>
           </div>
         </div>
 
         {/* Plan de pago */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg shadow-lg p-6 mb-6">
+          <h2 className="text-xl font-bold text-white mb-4">
             Plan de Publicación
           </h2>
           
-          <div className="border-2 border-blue-600 rounded-lg p-6 bg-blue-50">
+          <div className="border-2 border-purple-500/50 rounded-lg p-6 bg-purple-950/50">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-lg font-bold text-gray-900">Plan Mensual</h3>
-                <p className="text-sm text-gray-600">Publicación por 30 días</p>
+                <h3 className="text-lg font-bold text-white">Plan Mensual</h3>
+                <p className="text-sm text-gray-400">Publicación por 30 días</p>
               </div>
               <div className="text-right">
-                <p className="text-3xl font-bold text-blue-600">$3.00</p>
+                <p className="text-3xl font-bold text-purple-400">$3.00</p>
                 <p className="text-sm text-gray-500">USD</p>
               </div>
             </div>
             
-            <ul className="space-y-2 text-sm text-gray-700">
+            <ul className="space-y-2 text-sm text-gray-300">
               <li className="flex items-start">
                 <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -200,8 +200,8 @@ export default function PaymentPage() {
 
         {/* Error message */}
         {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-800">{error}</p>
+          <div className="mb-6 bg-red-950/50 border border-red-500/50 rounded-lg p-4">
+            <p className="text-red-300">{error}</p>
           </div>
         )}
 
@@ -210,7 +210,7 @@ export default function PaymentPage() {
           <button
             onClick={() => router.push("/")}
             disabled={processing}
-            className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition disabled:opacity-50"
+            className="flex-1 px-6 py-3 border-2 border-purple-500/50 rounded-lg font-medium text-gray-300 hover:bg-white/5 transition disabled:opacity-50"
           >
             Cancelar
           </button>
@@ -218,7 +218,7 @@ export default function PaymentPage() {
           <button
             onClick={handlePayment}
             disabled={processing || property.publication_status === "active"}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-500 text-white rounded-lg font-medium hover:from-purple-700 hover:to-cyan-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {processing ? (
               <span className="flex items-center justify-center">
@@ -236,7 +236,7 @@ export default function PaymentPage() {
 
         {/* Información de seguridad */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-400">
             🔒 Pago seguro procesado por{" "}
             <span className="font-semibold">PayPal</span>
           </p>

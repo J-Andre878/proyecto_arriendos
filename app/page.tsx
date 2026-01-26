@@ -31,19 +31,19 @@ export default async function Home() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors">
       {/* Navbar */}
       <Navbar />
 
       {/* Header / Hero Section */}
-      <header className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+      <header className="bg-gradient-to-br from-purple-600 via-violet-600 to-cyan-500 dark:from-gray-900 dark:via-purple-950 dark:to-cyan-900 text-white">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
-              Arriendos Loja
+            <h1 className="text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl bg-gradient-to-r from-white to-purple-100 dark:from-white dark:to-purple-200 bg-clip-text text-transparent">
+              Havela
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-xl text-blue-100">
-              Encuentra tu alojamiento perfecto en Loja. Espacios únicos,
+            <p className="mx-auto mt-6 max-w-2xl text-xl text-purple-100 dark:text-purple-200">
+              Encuentra tu alojamiento perfecto en cualquier parte. Espacios únicos,
               experiencias inolvidables.
             </p>
 
@@ -57,11 +57,11 @@ export default async function Home() {
       <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Título de sección */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
             Propiedades Disponibles
           </h2>
-          <p className="mt-2 text-gray-600">
-            {properties.length} alojamientos encontrados en Loja
+          <p className="mt-2 text-gray-600 dark:text-gray-400">
+            {properties.length} alojamientos disponibles en la plataforma
           </p>
         </div>
 
@@ -91,7 +91,7 @@ export default async function Home() {
         ) : (
           <div className="flex flex-col items-center justify-center py-20">
             <svg
-              className="h-24 w-24 text-gray-300"
+              className="h-24 w-24 text-gray-300 dark:text-gray-700"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -103,10 +103,10 @@ export default async function Home() {
                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
               />
             </svg>
-            <h3 className="mt-4 text-xl font-semibold text-gray-900">
+            <h3 className="mt-4 text-xl font-semibold text-gray-900 dark:text-white">
               No hay propiedades disponibles
             </h3>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-gray-600 dark:text-gray-400">
               Vuelve pronto para ver nuevas propiedades
             </p>
           </div>
@@ -114,10 +114,10 @@ export default async function Home() {
       </main>
 
       {/* Footer simple */}
-      <footer className="mt-20 border-t border-gray-200 bg-white">
+      <footer className="mt-20 border-t border-purple-500/30 dark:border-purple-500/30 bg-white/10 dark:bg-white/10">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <p className="text-center text-gray-500">
-            © 2026 Arriendos Loja. Todos los derechos reservados.
+          <p className="text-center text-gray-500 dark:text-gray-400">
+            © 2026 Havela. Todos los derechos reservados.
           </p>
         </div>
       </footer>
