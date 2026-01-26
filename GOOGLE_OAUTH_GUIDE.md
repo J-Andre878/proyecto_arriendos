@@ -115,6 +115,8 @@ Si un usuario se registró con Google:
 
 ## ❌ Solución de Problemas
 
+## ❌ Solución de Problemas
+
 ### Error: "State cookie was missing"
 **Causa**: Cookies no se guardaron correctamente
 **Solución**: Ya está arreglado con la configuración de cookies:
@@ -138,36 +140,111 @@ cookies: {
   },
 }
 ```
+**Para verificar**: Abre DevTools → Application → Cookies → Busca `next-auth.state` y `next-auth.pkce.code_verifier`
 
 ### Error: "Error en la configuración del sistema"
 **Causa**: El rol "user" no existía en la BD
-**Solución**: Ya está arreglado. El endpoint de registro auto-crea el rol si no existe:
-```typescript
-// En app/api/auth/register/route.ts
-const role = await prisma.roles.findUnique({
-  where: { name: "user" }
-})
-
-if (!role) {
-  await prisma.roles.create({
-    data: { name: "user", description: "Usuario normal" }
-  })
-}
-```
+**Solución**: Ya está arreglado. El callback de signIn auto-crea el rol si no existe
+**Para verificar**: Ve a `http://localhost:3000/api/debug/status` y verifica que `role.exists` es `true`
 
 ### Error: "Callback URL mismatch"
 **Causa**: URL en Google Cloud Console no coincide con NEXTAUTH_URL
 **Solución**: Verificar en Google Cloud Console:
-- **Authorized redirect URIs** debe incluir:
-  - `http://localhost:3000/api/auth/callback/google` (desarrollo)
-  - `https://tudominio.com/api/auth/callback/google` (producción)
+1. Ve a https://console.cloud.google.com/
+2. Selecciona tu proyecto
+3. Ve a "OAuth consent screen"
+4. Haz clic en "Authorized domains" y asegúrate que `localhost` está agregado (para desarrollo)
+5. Ve a "Credentials"
+6. Haz clic en tu OAuth 2.0 Client ID
+7. En "Authorized redirect URIs", verifica:
+   - `http://localhost:3000/api/auth/callback/google` (desarrollo)
+   - `https://tudominio.com/api/auth/callback/google` (producción)
 
-### Usuario no puede hacer login
-**Pasos de debug**:
-1. Verificar que las variables de entorno estén correctas: `echo $env:GOOGLE_CLIENT_ID`
-2. Revisar en NextAuth Admin: `http://localhost:3000/api/auth/signin`
-3. Buscar en base de datos: `SELECT * FROM users WHERE email = 'usuario@gmail.com'`
-4. Ver logs en Google Cloud Console
+**Para verificar en desarrollo**:
+- NEXTAUTH_URL debe ser exactamente: `http://localhost:3000`
+- GOOGLE_CLIENT_ID: `562933945016-s6sqr63bqjoeliuba83n5pls4mm28746.apps.googleusercontent.com`
+- GOOGLE_CLIENT_SECRET: (debe estar en tu .env)
+
+### Usuario no puede hacer login después de registrarse
+**Síntomas**: 
+- Usuario se registra correctamente
+- Intenta hacer login con sus credenciales y recibe "Credenciales inválidas"
+
+**Posibles causas**:
+1. **La contraseña no se guardó correctamente**
+   - Solución: Verificar que `bcryptjs` está instalado: `npm list bcryptjs`
+   - Verificar en BD: `SELECT password FROM users WHERE email='test@example.com';` (debe ser hash, no texto)
+
+2. **El usuario está inactivo**
+   - Solución: Verificar `is_active` en BD: `SELECT is_active FROM users WHERE email='test@example.com';`
+   - Debe ser `true`
+
+3. **El email no coincide exactamente**
+   - Solución: Verificar que el email en registro y login son idénticos (case-sensitive)
+
+**Para verificar**:
+```bash
+# Ir a http://localhost:3000/api/debug/status y revisar la lista de usuarios
+# Asegúrate que:
+# 1. El usuario existe
+# 2. is_active es true
+# 3. El email está correcto
+```
+
+### Login con Google no redirige correctamente
+**Síntomas**: 
+- Hace clic en "Continuar con Google"
+- Google autentica pero no vuelve a tu app
+
+**Posibles causas**:
+1. **Falta el NEXTAUTH_SECRET**
+   - Solución: Genera uno: `openssl rand -base64 32` (en Linux/Mac)
+   - O usa: `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`
+   - Luego agrega a `.env`: `NEXTAUTH_SECRET=<el_valor_generado>`
+
+2. **NEXTAUTH_URL es incorrecto**
+   - Solución: Verifica que sea exactamente tu URL (sin trailing slash)
+   - Desarrollo: `http://localhost:3000`
+   - Producción: `https://tudominio.com`
+
+3. **Google Credentials son inválidos o están rotados**
+   - Solución: Verifica en Google Cloud Console que todavía son válidos
+   - Descarga nuevos si es necesario
+
+### Database connection error
+**Error**: "Can't reach database server"
+**Solución**:
+1. Verifica que PostgreSQL está corriendo: `pg_isready -h localhost -p 5432`
+2. Verifica el DATABASE_URL en `.env` es correcto
+3. Verifica credenciales: usuario, contraseña, nombre de BD
+
+---
+
+## 🔍 Debugging - Revisar Logs
+
+Para ver logs de NextAuth en desarrollo:
+
+1. **En servidor (terminal)**: Busca logs con emoji:
+   - 🔐 Google SignIn
+   - 👤 Usuario creado/existente
+   - 🔑 JWT Callback
+   - ❌ Errores
+
+2. **En navegador**: Abre DevTools → Console
+   - Busca errores rojos
+   - Busca warnings
+
+3. **Flujo completo**:
+   ```
+   1. Haz clic en "Continuar con Google"
+   2. Revisa terminal - deberías ver: 🔐 Google SignIn
+   3. Google abre en nueva ventana
+   4. Después de autenticar en Google, regresa a tu app
+   5. Revisa terminal - deberías ver: 👤 Usuario creado o existente
+   6. Revisa terminal - deberías ver: 🔑 JWT Callback
+   7. Deberías ser redirigido a home (/)
+   8. En DevTools → Application → Cookies, verifica next-auth.jwt existe
+   ```
 
 ## 🚀 Flujo de Registro con Google
 
@@ -207,15 +284,73 @@ CREATE TABLE users (
 
 ## ✅ Verificación de Funcionamiento
 
-### En desarrollo:
-1. Ir a `http://localhost:3000/login`
-2. Hacer clic en "Continuar con Google"
-3. Completar flujo de Google
-4. Debería redirigir a `/` (home) autenticado
+### Endpoints de Debug (Desarrollo solamente)
 
-### Cookies a verificar (DevTools):
-1. Abrir DevTools → Application → Cookies
-2. Debería haber: `next-auth.jwt`, `next-auth.pkce.code_verifier`, `next-auth.state`
+Para verificar que todo está configurado correctamente:
+
+**1. Verificar configuración:**
+```
+GET http://localhost:3000/api/auth/debug
+```
+Respuesta esperada:
+```json
+{
+  "environment": "development",
+  "google": {
+    "clientId": "✓ Configurado",
+    "clientSecret": "✓ Configurado"
+  },
+  "nextAuth": {
+    "url": "http://localhost:3000",
+    "secret": "✓ Configurado"
+  },
+  "database": {
+    "url": "✓ Configurado"
+  }
+}
+```
+
+**2. Verificar estado de BD:**
+```
+GET http://localhost:3000/api/debug/status
+```
+Respuesta esperada:
+```json
+{
+  "role": {
+    "exists": true,
+    "id": 1,
+    "name": "user"
+  },
+  "users": {
+    "total": 5,
+    "list": [
+      {
+        "id": 1,
+        "name": "Test User",
+        "email": "test@example.com",
+        "auth_provider": "google",
+        "is_active": true
+      }
+    ]
+  }
+}
+```
+
+**3. Simular Google Login:**
+```
+POST http://localhost:3000/api/test/google-login
+```
+Body:
+```json
+{
+  "email": "user@gmail.com",
+  "name": "Test User",
+  "image": "https://example.com/photo.jpg"
+}
+```
+
+O visita: `http://localhost:3000/test/google-login` y haz clic en "Simular Google Login"
 
 ## 🔒 Seguridad
 
