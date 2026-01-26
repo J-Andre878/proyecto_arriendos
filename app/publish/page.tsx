@@ -252,8 +252,15 @@ export default function PublishPage() {
                 <select
                   value={formData.property_type}
                   onChange={(e) => setFormData({ ...formData, property_type: e.target.value })}
-                  className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
+                  className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-gray-900/50 appearance-none cursor-pointer"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23d1d5db' d='M1 4l5 5 5-5'/%3E%3C/svg%3E")`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 0.75rem center',
+                    paddingRight: '2.5rem',
+                  }}
                 >
+                  <option value="">Seleccionar tipo...</option>
                   <option value="apartment">Departamento</option>
                   <option value="house">Casa</option>
                   <option value="room">Habitación</option>

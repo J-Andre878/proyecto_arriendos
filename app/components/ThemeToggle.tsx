@@ -17,27 +17,14 @@ export default function ThemeToggle() {
 
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-purple-200 to-cyan-200 dark:from-gray-700 dark:to-gray-600 hover:from-purple-300 hover:to-cyan-300 dark:hover:from-gray-600 dark:hover:to-gray-500 transition-all duration-300 shadow-md hover:shadow-lg border border-purple-300 dark:border-purple-700"
-      title={`Cambiar a tema ${theme === "dark" ? "claro" : "oscuro"}`}
-      aria-label="Toggle theme"
+      onClick={() => setTheme("dark")}
+      className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-cyan-400 hover:from-violet-600 hover:to-cyan-500 transition-all duration-300 shadow-md hover:shadow-lg border border-cyan-300"
+      title="Modo oscuro"
+      aria-label="Dark mode"
     >
-      {/* Moon icon - visible in light mode */}
+      {/* Sun icon */}
       <svg
-        className={`absolute w-5 h-5 text-purple-600 dark:text-transparent transition-opacity duration-300 ${
-          theme === "light" ? "opacity-100" : "opacity-0"
-        }`}
-        fill="currentColor"
-        viewBox="0 0 20 20"
-      >
-        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-      </svg>
-
-      {/* Sun icon - visible in dark mode */}
-      <svg
-        className={`absolute w-5 h-5 text-amber-400 dark:text-amber-300 transition-opacity duration-300 ${
-          theme === "dark" ? "opacity-100" : "opacity-0"
-        }`}
+        className="w-5 h-5 text-amber-200 transition-opacity duration-300"
         fill="currentColor"
         viewBox="0 0 20 20"
       >

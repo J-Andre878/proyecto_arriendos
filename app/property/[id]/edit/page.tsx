@@ -327,7 +327,13 @@ export default function EditPropertyPage() {
                     name="city"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
+                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-gray-900/50 appearance-none cursor-pointer"
+                    style={{
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23d1d5db' d='M1 4l5 5 5-5'/%3E%3C/svg%3E")`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'right 0.75rem center',
+                      paddingRight: '2.5rem',
+                    }}
                   >
                     <option value="Loja">Loja</option>
                     <option value="Quito">Quito</option>
@@ -343,7 +349,13 @@ export default function EditPropertyPage() {
                     name="property_type"
                     value={formData.property_type}
                     onChange={handleInputChange}
-                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
+                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-gray-900/50 appearance-none cursor-pointer"
+                    style={{
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23d1d5db' d='M1 4l5 5 5-5'/%3E%3C/svg%3E")`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'right 0.75rem center',
+                      paddingRight: '2.5rem',
+                    }}
                   >
                     <option value="apartment">Departamento</option>
                     <option value="house">Casa</option>
@@ -406,7 +418,7 @@ export default function EditPropertyPage() {
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Huéspedes máx.
+                    Número máximo de huéspedes
                   </label>
                   <input
                     type="number"
@@ -419,7 +431,7 @@ export default function EditPropertyPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Habitaciones
+                    Número de habitaciones
                   </label>
                   <input
                     type="number"
@@ -432,7 +444,7 @@ export default function EditPropertyPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Camas
+                    Número de camas
                   </label>
                   <input
                     type="number"
@@ -445,7 +457,7 @@ export default function EditPropertyPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Baños
+                    Número de baños
                   </label>
                   <input
                     type="number"
