@@ -8,8 +8,9 @@ export const authOptions: AuthOptions = {
   providers: [
     // Login con Google
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      allowDangerousEmailAccountLinking: true,
     }),
     
     // Login con Email/Password
@@ -51,56 +52,96 @@ export const authOptions: AuthOptions = {
   
   callbacks: {
     async signIn({ user, account }) {
-      // Si es login con Google, crear/actualizar usuario en BD
-      if (account?.provider === "google") {
-        const existingUser = await prisma.users.findUnique({
-          where: { email: user.email! }
-        })
+      try {
+        // Si es login con Google, crear/actualizar usuario en BD
+        if (account?.provider === "google") {
+          console.log("🔐 Google SignIn - Usuario:", user.email);
 
-        if (!existingUser) {
-          // Crear nuevo usuario con Google
-          await prisma.users.create({
-            data: {
-              email: user.email!,
-              name: user.name || "",
-              avatar_url: user.image,
-              auth_provider: "google",
-              role_id: 1, // rol usuario normal
-            }
+          // Asegurar que el rol "user" existe
+          let userRole = await prisma.roles.findUnique({
+            where: { name: "user" }
           })
-        } else if (existingUser.auth_provider === "local") {
-          // Vincular cuenta de Google a usuario existente
-          await prisma.users.update({
-            where: { email: user.email! },
-            data: {
-              auth_provider: "google",
-              avatar_url: user.image || existingUser.avatar_url,
-            }
+
+          if (!userRole) {
+            console.log("📝 Creando rol 'user'");
+            userRole = await prisma.roles.create({
+              data: {
+                name: "user",
+                description: "Usuario normal"
+              }
+            })
+          }
+
+          const existingUser = await prisma.users.findUnique({
+            where: { email: user.email! }
           })
+
+          if (!existingUser) {
+            // Crear nuevo usuario con Google
+            console.log("👤 Creando nuevo usuario con Google:", user.email);
+            const newUser = await prisma.users.create({
+              data: {
+                email: user.email!,
+                name: user.name || "Usuario",
+                surname: null,
+                avatar_url: user.image || null,
+                auth_provider: "google",
+                role_id: userRole.id,
+                is_active: true,
+              }
+            })
+            console.log("✅ Usuario creado:", newUser.id, newUser.email);
+          } else {
+            console.log("👤 Usuario existente encontrado:", existingUser.id);
+            if (existingUser.auth_provider === "local") {
+              // Vincular cuenta de Google a usuario existente
+              console.log("🔗 Vinculando Google a usuario local");
+              await prisma.users.update({
+                where: { email: user.email! },
+                data: {
+                  auth_provider: "google",
+                  avatar_url: user.image || existingUser.avatar_url,
+                }
+              })
+            }
+          }
         }
+        return true
+      } catch (error) {
+        console.error("❌ Error en signIn callback:", error)
+        return false
       }
-      return true
     },
     
     async session({ session, token }) {
       if (session.user) {
-        // Buscar el ID del usuario en nuestra BD por email
-        const dbUser = await prisma.users.findUnique({
-          where: { email: session.user.email! },
-          select: { id: true }
-        })
-        
-        if (dbUser) {
-          session.user.id = dbUser.id.toString()
-        }
+        session.user.id = token.id as string
+        console.log("📋 Session creada para:", session.user.email, "ID:", token.id);
       }
       return session
     },
     
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
+      console.log("🔑 JWT Callback - user:", user?.email, "account:", account?.provider);
+      
       if (user) {
         token.id = user.id
+        console.log("🎯 Token actualizado con ID de usuario:", user.id);
       }
+      
+      // Si es Google login sin user (refresh), buscar el usuario en BD
+      if (account?.provider === "google" && !token.id && token.email) {
+        console.log("🔍 Buscando usuario Google en BD:", token.email);
+        const dbUser = await prisma.users.findUnique({
+          where: { email: token.email },
+          select: { id: true }
+        })
+        if (dbUser) {
+          token.id = dbUser.id.toString()
+          console.log("✅ Usuario encontrado en BD, ID:", dbUser.id);
+        }
+      }
+      
       return token
     }
   },
@@ -135,6 +176,22 @@ export const authOptions: AuthOptions = {
   },
   
   secret: process.env.NEXTAUTH_SECRET,
+
+  events: {
+    async signIn({ user, account, profile, isNewUser }) {
+      console.log("✅ signIn event:", { 
+        email: user?.email, 
+        provider: account?.provider,
+        isNewUser 
+      });
+    },
+    async session({ session, token }) {
+      console.log("📋 session event:", session.user?.email);
+    },
+    async error({ error }) {
+      console.error("❌ NextAuth error:", error);
+    },
+  },
 }
 
 const handler = NextAuth(authOptions)
