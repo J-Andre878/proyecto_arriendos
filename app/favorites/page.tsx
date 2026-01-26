@@ -79,23 +79,23 @@ export default function FavoritesPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-gray-50 pb-20 pt-24">
+      <main className="min-h-screen bg-gray-900/50 pb-20 pt-24">
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="mb-2 text-4xl font-bold text-gray-900">
+            <h1 className="mb-2 text-4xl font-bold text-white">
               Guardados
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-400">
               Propiedades que has guardado para ver más tarde
             </p>
           </div>
 
           {/* Contenido */}
           {favorites.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-12 text-center shadow-lg">
+            <div className="flex flex-col items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm p-12 text-center shadow-lg">
               <svg
-                className="mb-4 h-24 w-24 text-gray-300"
+                className="mb-4 h-24 w-24 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.5"
@@ -107,23 +107,23 @@ export default function FavoritesPage() {
                   d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
                 />
               </svg>
-              <h2 className="mb-2 text-2xl font-semibold text-gray-900">
+              <h2 className="mb-2 text-2xl font-semibold text-white">
                 No tienes propiedades guardadas aún
               </h2>
-              <p className="mb-6 text-gray-600">
+              <p className="mb-6 text-gray-400">
                 Explora propiedades y guarda las que te gusten haciendo clic en
                 el ícono de guardado
               </p>
               <button
                 onClick={() => router.push("/")}
-                className="rounded-xl bg-blue-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
+                className="rounded-xl bg-purple-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-purple-700"
               >
                 Explorar Propiedades
               </button>
             </div>
           ) : (
             <>
-              <div className="mb-4 text-sm text-gray-600">
+              <div className="mb-4 text-sm text-gray-400">
                 {favorites.length}{" "}
                 {favorites.length === 1 ? "propiedad guardada" : "propiedades guardadas"}
               </div>

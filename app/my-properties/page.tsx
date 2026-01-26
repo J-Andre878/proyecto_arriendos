@@ -137,7 +137,7 @@ export default function MyPropertiesPage() {
         <div className="flex min-h-screen items-center justify-center">
           <div className="text-center">
             <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
-            <p className="text-gray-600">Cargando propiedades...</p>
+            <p className="text-gray-400">Cargando propiedades...</p>
           </div>
         </div>
       </>
@@ -147,21 +147,21 @@ export default function MyPropertiesPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-gray-50 pb-20 pt-24">
+      <main className="min-h-screen bg-gray-900/50 pb-20 pt-24">
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h1 className="mb-2 text-4xl font-bold text-gray-900">
+              <h1 className="mb-2 text-4xl font-bold text-white">
                 Mis Propiedades
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-400">
                 Administra tus publicaciones y verifica su estado
               </p>
             </div>
             <Link
               href="/publish"
-              className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
+              className="rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 px-6 py-3 font-semibold text-white transition-colors hover:from-purple-700 hover:to-cyan-600"
             >
               + Nueva Propiedad
             </Link>
@@ -169,7 +169,7 @@ export default function MyPropertiesPage() {
 
           {/* Contenido */}
           {properties.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-12 text-center shadow-lg">
+            <div className="flex flex-col items-center justify-center rounded-2xl bg-white/10 p-12 text-center shadow-lg">
               <svg
                 className="mb-4 h-24 w-24 text-gray-300"
                 fill="none"
@@ -183,22 +183,22 @@ export default function MyPropertiesPage() {
                   d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
                 />
               </svg>
-              <h2 className="mb-2 text-2xl font-semibold text-gray-900">
+              <h2 className="mb-2 text-2xl font-semibold text-white">
                 No tienes propiedades publicadas
               </h2>
-              <p className="mb-6 text-gray-600">
+              <p className="mb-6 text-gray-400">
                 Crea tu primera propiedad y comienza a recibir reservas
               </p>
               <Link
                 href="/publish"
-                className="rounded-xl bg-blue-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
+                className="rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 px-8 py-3 font-semibold text-white transition-colors hover:from-purple-700 hover:to-cyan-600"
               >
                 Publicar Propiedad
               </Link>
             </div>
           ) : (
             <>
-              <div className="mb-4 text-sm text-gray-600">
+              <div className="mb-4 text-sm text-gray-400">
                 {properties.length}{" "}
                 {properties.length === 1 ? "propiedad" : "propiedades"}
               </div>
@@ -213,7 +213,7 @@ export default function MyPropertiesPage() {
                   return (
                     <div
                       key={property.id}
-                      className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-lg transition-shadow hover:shadow-xl md:flex-row"
+                      className="flex flex-col overflow-hidden rounded-2xl bg-white/10 shadow-lg transition-shadow hover:shadow-xl md:flex-row"
                     >
                       {/* Imagen */}
                       <div className="relative h-64 w-full md:h-auto md:w-80">
@@ -247,15 +247,15 @@ export default function MyPropertiesPage() {
                       <div className="flex flex-1 flex-col p-6">
                         <div className="mb-4 flex items-start justify-between">
                           <div className="flex-1">
-                            <h3 className="mb-2 text-2xl font-bold text-gray-900">
+                            <h3 className="mb-2 text-2xl font-bold text-white">
                               {property.title}
                             </h3>
-                            <p className="mb-2 text-gray-600">
+                            <p className="mb-2 text-gray-400">
                               📍 {property.city || "Sin ubicación"}
                             </p>
-                            <p className="text-2xl font-bold text-blue-600">
+                            <p className="text-2xl font-bold text-purple-400">
                               ${parseFloat(property.price_per_night).toFixed(2)}
-                              <span className="text-sm font-normal text-gray-600">
+                              <span className="text-sm font-normal text-gray-400">
                                 {" "}
                                 / noche
                               </span>
@@ -266,13 +266,13 @@ export default function MyPropertiesPage() {
 
                         {/* Descripción */}
                         {property.description && (
-                          <p className="mb-4 line-clamp-2 text-gray-700">
+                          <p className="mb-4 line-clamp-2 text-gray-300">
                             {property.description}
                           </p>
                         )}
 
                         {/* Fechas */}
-                        <div className="mb-4 text-sm text-gray-600">
+                        <div className="mb-4 text-sm text-gray-400">
                           <p>
                             Creada:{" "}
                             {new Date(property.created_at).toLocaleDateString(
@@ -319,7 +319,7 @@ export default function MyPropertiesPage() {
                           ) : property.is_active ? (
                             <Link
                               href={`/property/${property.id}`}
-                              className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-700"
+                              className="rounded-lg bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-2 font-semibold text-white transition-colors hover:from-purple-700 hover:to-cyan-600"
                             >
                               👁️ Ver Publicación
                             </Link>
@@ -336,7 +336,7 @@ export default function MyPropertiesPage() {
                           <button
                             onClick={() => handleDelete(property.id)}
                             disabled={deletingId === property.id}
-                            className="rounded-lg border border-red-300 px-4 py-2 font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
+                            className="rounded-lg border border-red-500/50 px-4 py-2 font-semibold text-red-400 transition-colors hover:bg-red-950/50 disabled:opacity-50"
                           >
                             {deletingId === property.id ? "..." : "🗑️ Eliminar"}
                           </button>

@@ -127,25 +127,25 @@ function SearchPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900/50">
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
         {/* Título */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900">Buscar Propiedades</h1>
-          <p className="mt-2 text-lg text-gray-600">Encuentra el alojamiento perfecto para ti</p>
+          <h1 className="text-4xl font-bold text-white">Buscar Propiedades</h1>
+          <p className="mt-2 text-lg text-gray-400">Encuentra el alojamiento perfecto para ti</p>
         </div>
 
         {/* Formulario de filtros */}
         <form
           onSubmit={handleSearch}
-          className="mb-12 rounded-2xl bg-white p-8 shadow-lg"
+          className="mb-12 rounded-2xl bg-white/10 backdrop-blur-sm p-8 shadow-lg"
         >
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {/* Provincia */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Provincia
               </label>
               <input
@@ -154,13 +154,13 @@ function SearchPageContent() {
                 placeholder="Ej: Loja"
                 value={filters.province}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Ciudad */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Ciudad
               </label>
               <input
@@ -169,20 +169,20 @@ function SearchPageContent() {
                 placeholder="Ej: Loja"
                 value={filters.city}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Tipo de propiedad */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Tipo de propiedad
               </label>
               <select
                 name="propertyType"
                 value={filters.propertyType}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               >
                 <option value="">Todos</option>
                 <option value="apartment">Departamento</option>
@@ -196,7 +196,7 @@ function SearchPageContent() {
 
             {/* Número de huéspedes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Número de huéspedes
               </label>
               <input
@@ -206,13 +206,13 @@ function SearchPageContent() {
                 min="1"
                 value={filters.numGuests}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Número de habitaciones */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Habitaciones
               </label>
               <input
@@ -222,13 +222,13 @@ function SearchPageContent() {
                 min="1"
                 value={filters.numRooms}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Número de camas */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Camas
               </label>
               <input
@@ -238,13 +238,13 @@ function SearchPageContent() {
                 min="1"
                 value={filters.numBeds}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Número de baños */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Baños
               </label>
               <input
@@ -254,13 +254,13 @@ function SearchPageContent() {
                 min="1"
                 value={filters.numBathrooms}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Precio mínimo */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Precio mínimo
               </label>
               <input
@@ -271,13 +271,13 @@ function SearchPageContent() {
                 step="0.01"
                 value={filters.minPrice}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Precio máximo */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Precio máximo
               </label>
               <input
@@ -288,7 +288,7 @@ function SearchPageContent() {
                 step="0.01"
                 value={filters.maxPrice}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
           </div>
@@ -298,14 +298,14 @@ function SearchPageContent() {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-700 disabled:bg-gray-400"
+              className="flex-1 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-purple-700 disabled:bg-gray-400"
             >
               {loading ? "Buscando..." : "🔍 Buscar"}
             </button>
             <button
               type="button"
               onClick={handleReset}
-              className="flex-1 rounded-lg border-2 border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-100"
+              className="flex-1 rounded-lg border-2 border-purple-500/50 px-6 py-3 font-semibold text-gray-300 transition-colors hover:bg-white/5"
             >
               Limpiar Filtros
             </button>
@@ -318,14 +318,14 @@ function SearchPageContent() {
             {loading ? (
               <div className="flex justify-center py-12">
                 <div className="text-center">
-                  <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
-                  <p className="text-gray-600">Buscando propiedades...</p>
+                  <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-purple-600 border-t-transparent"></div>
+                  <p className="text-gray-400">Buscando propiedades...</p>
                 </div>
               </div>
             ) : properties.length > 0 ? (
               <>
                 <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">
+                  <h2 className="text-2xl font-bold text-white">
                     {properties.length} propiedades encontradas
                   </h2>
                 </div>
@@ -352,9 +352,9 @@ function SearchPageContent() {
                 </div>
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-12 text-center shadow-lg">
+              <div className="flex flex-col items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm p-12 text-center shadow-lg">
                 <svg
-                  className="mb-4 h-24 w-24 text-gray-300"
+                  className="mb-4 h-24 w-24 text-gray-400"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"
@@ -366,10 +366,10 @@ function SearchPageContent() {
                     d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.5 5.5a7.5 7.5 0 0010.5 10.5z"
                   />
                 </svg>
-                <h3 className="mb-2 text-2xl font-bold text-gray-900">
+                <h3 className="mb-2 text-2xl font-bold text-white">
                   No se encontraron propiedades
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-400">
                   Intenta ajustar tus filtros para encontrar lo que buscas
                 </p>
               </div>
@@ -380,7 +380,7 @@ function SearchPageContent() {
         {/* Mensaje inicial */}
         {!hasSearched && (
           <div className="text-center">
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-400">
               Completa los filtros y haz clic en "Buscar" para encontrar propiedades
             </p>
           </div>
