@@ -8,8 +8,8 @@ export const authOptions: AuthOptions = {
   providers: [
     // Login con Google
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       allowDangerousEmailAccountLinking: true,
     }),
     
@@ -52,96 +52,62 @@ export const authOptions: AuthOptions = {
   
   callbacks: {
     async signIn({ user, account }) {
-      try {
-        // Si es login con Google, crear/actualizar usuario en BD
-        if (account?.provider === "google") {
-          console.log("🔐 Google SignIn - Usuario:", user.email);
-
-          // Asegurar que el rol "user" existe
-          let userRole = await prisma.roles.findUnique({
-            where: { name: "user" }
-          })
-
-          if (!userRole) {
-            console.log("📝 Creando rol 'user'");
-            userRole = await prisma.roles.create({
-              data: {
-                name: "user",
-                description: "Usuario normal"
-              }
-            })
-          }
-
+      // Si es login con Google, crear/actualizar usuario en BD
+      if (account?.provider === "google") {
+        try {
           const existingUser = await prisma.users.findUnique({
             where: { email: user.email! }
           })
 
           if (!existingUser) {
             // Crear nuevo usuario con Google
-            console.log("👤 Creando nuevo usuario con Google:", user.email);
-            const newUser = await prisma.users.create({
+            await prisma.users.create({
               data: {
                 email: user.email!,
                 name: user.name || "Usuario",
-                surname: null,
-                avatar_url: user.image || null,
+                avatar_url: user.image,
                 auth_provider: "google",
-                role_id: userRole.id,
-                is_active: true,
+                role_id: 1, // rol usuario normal
               }
             })
-            console.log("✅ Usuario creado:", newUser.id, newUser.email);
-          } else {
-            console.log("👤 Usuario existente encontrado:", existingUser.id);
-            if (existingUser.auth_provider === "local") {
-              // Vincular cuenta de Google a usuario existente
-              console.log("🔗 Vinculando Google a usuario local");
-              await prisma.users.update({
-                where: { email: user.email! },
-                data: {
-                  auth_provider: "google",
-                  avatar_url: user.image || existingUser.avatar_url,
-                }
-              })
-            }
+          } else if (existingUser.auth_provider === "local") {
+            // Vincular cuenta de Google a usuario existente
+            await prisma.users.update({
+              where: { email: user.email! },
+              data: {
+                auth_provider: "google",
+                avatar_url: user.image || existingUser.avatar_url,
+              }
+            })
           }
+          return true
+        } catch (error) {
+          console.error("Error en callback signIn:", error)
+          return false
         }
-        return true
-      } catch (error) {
-        console.error("❌ Error en signIn callback:", error)
-        return false
       }
+      return true
     },
     
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string
-        console.log("📋 Session creada para:", session.user.email, "ID:", token.id);
+        // Buscar el ID del usuario en nuestra BD por email
+        const dbUser = await prisma.users.findUnique({
+          where: { email: session.user.email! },
+          select: { id: true }
+        })
+        
+        if (dbUser) {
+          session.user.id = dbUser.id.toString()
+        }
       }
       return session
     },
     
-    async jwt({ token, user, account }) {
-      console.log("🔑 JWT Callback - user:", user?.email, "account:", account?.provider);
-      
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        console.log("🎯 Token actualizado con ID de usuario:", user.id);
       }
-      
-      // Si es Google login sin user (refresh), buscar el usuario en BD
-      if (account?.provider === "google" && !token.id && token.email) {
-        console.log("🔍 Buscando usuario Google en BD:", token.email);
-        const dbUser = await prisma.users.findUnique({
-          where: { email: token.email },
-          select: { id: true }
-        })
-        if (dbUser) {
-          token.id = dbUser.id.toString()
-          console.log("✅ Usuario encontrado en BD, ID:", dbUser.id);
-        }
-      }
-      
       return token
     }
   },
@@ -157,41 +123,45 @@ export const authOptions: AuthOptions = {
   },
   
   cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+      },
+    },
+    callbackUrl: {
+      name: "next-auth.callback-url",
+      options: {
+        sameSite: "lax",
+        path: "/",
+      },
+    },
+    csrfToken: {
+      name: "next-auth.csrf-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+      },
+    },
     pkceCodeVerifier: {
       name: "next-auth.pkce.code_verifier",
       options: {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
-      },
-    },
-    state: {
-      name: "next-auth.state",
-      options: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        maxAge: 15 * 60, // 15 minutes
+        path: "/",
       },
     },
   },
   
   secret: process.env.NEXTAUTH_SECRET,
-
-  events: {
-    async signIn({ user, account, profile, isNewUser }) {
-      console.log("✅ signIn event:", { 
-        email: user?.email, 
-        provider: account?.provider,
-        isNewUser 
-      });
-    },
-    async session({ session, token }) {
-      console.log("📋 session event:", session.user?.email);
-    },
-    async error({ error }) {
-      console.error("❌ NextAuth error:", error);
-    },
-  },
+  
+  trustHost: true,
 }
 
 const handler = NextAuth(authOptions)
