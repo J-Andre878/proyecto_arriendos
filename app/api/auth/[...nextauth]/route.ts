@@ -10,6 +10,7 @@ export const authOptions: AuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      allowDangerousEmailAccountLinking: true,
     }),
     
     // Login con Email/Password
@@ -53,30 +54,36 @@ export const authOptions: AuthOptions = {
     async signIn({ user, account }) {
       // Si es login con Google, crear/actualizar usuario en BD
       if (account?.provider === "google") {
-        const existingUser = await prisma.users.findUnique({
-          where: { email: user.email! }
-        })
+        try {
+          const existingUser = await prisma.users.findUnique({
+            where: { email: user.email! }
+          })
 
-        if (!existingUser) {
-          // Crear nuevo usuario con Google
-          await prisma.users.create({
-            data: {
-              email: user.email!,
-              name: user.name || "",
-              avatar_url: user.image,
-              auth_provider: "google",
-              role_id: 1, // rol usuario normal
-            }
-          })
-        } else if (existingUser.auth_provider === "local") {
-          // Vincular cuenta de Google a usuario existente
-          await prisma.users.update({
-            where: { email: user.email! },
-            data: {
-              auth_provider: "google",
-              avatar_url: user.image || existingUser.avatar_url,
-            }
-          })
+          if (!existingUser) {
+            // Crear nuevo usuario con Google
+            await prisma.users.create({
+              data: {
+                email: user.email!,
+                name: user.name || "Usuario",
+                avatar_url: user.image,
+                auth_provider: "google",
+                role_id: 1, // rol usuario normal
+              }
+            })
+          } else if (existingUser.auth_provider === "local") {
+            // Vincular cuenta de Google a usuario existente
+            await prisma.users.update({
+              where: { email: user.email! },
+              data: {
+                auth_provider: "google",
+                avatar_url: user.image || existingUser.avatar_url,
+              }
+            })
+          }
+          return true
+        } catch (error) {
+          console.error("Error en callback signIn:", error)
+          return false
         }
       }
       return true
@@ -116,25 +123,45 @@ export const authOptions: AuthOptions = {
   },
   
   cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+      },
+    },
+    callbackUrl: {
+      name: "next-auth.callback-url",
+      options: {
+        sameSite: "lax",
+        path: "/",
+      },
+    },
+    csrfToken: {
+      name: "next-auth.csrf-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+      },
+    },
     pkceCodeVerifier: {
       name: "next-auth.pkce.code_verifier",
       options: {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
-      },
-    },
-    state: {
-      name: "next-auth.state",
-      options: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        maxAge: 15 * 60, // 15 minutes
+        path: "/",
       },
     },
   },
   
   secret: process.env.NEXTAUTH_SECRET,
+  
+  trustHost: true,
 }
 
 const handler = NextAuth(authOptions)
