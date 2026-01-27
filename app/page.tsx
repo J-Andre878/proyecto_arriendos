@@ -4,12 +4,17 @@ import { prisma } from "@/lib/prisma";
 import SearchBar from "./components/SearchBar";
 
 export default async function Home() {
-  // Obtener propiedades activas con sus imágenes
+  // Obtener propiedades activas con sus imágenes (máximo 30 días)
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
   const properties = await prisma.properties.findMany({
     where: {
       is_active: true,
-      // TODO: Agregar filtro publication_status cuando Prisma lo reconozca
       deleted_at: null,
+      published_at: {
+        gte: thirtyDaysAgo, // Publicadas en los últimos 30 días
+      },
     },
     include: {
       property_images: {

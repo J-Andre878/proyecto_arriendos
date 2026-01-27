@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       title,
       description,
       address,
-
+      province,
       city,
       phones,
       num_guests,
@@ -81,6 +81,7 @@ export async function POST(request: Request) {
         title,
         description,
         address,
+        province: province || "Loja",
         city: city || "Sin especificar",
         num_guests: num_guests || 1,
         num_rooms: num_rooms || 1,

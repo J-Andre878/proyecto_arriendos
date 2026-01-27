@@ -21,6 +21,7 @@ export default function PublishPage() {
     title: "",
     description: "",
     address: "",
+    province: "Loja",
     city: "Loja",
     phones: [""],
     num_guests: 1,
@@ -287,6 +288,21 @@ export default function PublishPage() {
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
                   placeholder="Calle Principal y Av. Universitaria"
+                />
+              </div>
+
+              {/* Provincia */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-100 mb-2">
+                  Provincia *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.province}
+                  onChange={(e) => setFormData({ ...formData, province: e.target.value })}
+                  className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
+                  placeholder="Loja"
                 />
               </div>
 

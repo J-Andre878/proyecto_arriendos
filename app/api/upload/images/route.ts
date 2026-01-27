@@ -21,7 +21,15 @@ export async function POST(request: Request) {
     }
 
     const formData = await request.formData();
-    const files = formData.getAll("images") as File[];
+    
+    // Soportar tanto "file" (para avatar) como "images" (para propiedades)
+    let files = formData.getAll("images") as File[];
+    if (!files || files.length === 0) {
+      const singleFile = formData.get("file") as File | null;
+      if (singleFile) {
+        files = [singleFile];
+      }
+    }
 
     if (!files || files.length === 0) {
       return NextResponse.json(
@@ -69,6 +77,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       images: uploadedImages,
+      urls: uploadedImages.map((img) => img.url), // Para compatibilidad con perfil
     });
   } catch (error) {
     console.error("Error al subir imágenes:", error);

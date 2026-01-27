@@ -83,9 +83,28 @@ export default function ProfilePage() {
       const data = await response.json();
 
       if (response.ok && data.urls && data.urls[0]) {
-        setProfileImage(data.urls[0]);
-        setSuccess("Foto de perfil actualizada");
-        setTimeout(() => setSuccess(""), 3000);
+        const imageUrl = data.urls[0];
+        setProfileImage(imageUrl);
+        
+        // Guardar la imagen en el perfil del usuario
+        const profileResponse = await fetch("/api/profile", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            phone: formData.phone,
+            image: imageUrl,
+          }),
+        });
+
+        if (profileResponse.ok) {
+          setSuccess("Foto de perfil actualizada correctamente");
+          setTimeout(() => setSuccess(""), 3000);
+        } else {
+          setError("Error al guardar la foto en el perfil");
+        }
       } else {
         setError(data.error || "Error al cargar la imagen");
       }

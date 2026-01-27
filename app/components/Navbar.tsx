@@ -150,10 +150,10 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-4">
+          <div className="md:hidden border-t border-purple-500/30 bg-purple-950/80 py-4">
             {session ? (
               <div className="space-y-2">
-                <div className="px-4 py-2 font-semibold text-gray-900">
+                <div className="px-4 py-2 font-semibold text-white">
                   {session.user?.name || session.user?.email}
                 </div>
                 <Link
@@ -165,28 +165,28 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/my-properties"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
                   onClick={() => setMenuOpen(false)}
                 >
                   Mis Propiedades
                 </Link>
                 <Link
                   href="/favorites"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
                   onClick={() => setMenuOpen(false)}
                 >
                   Guardados
                 </Link>
                 <Link
                   href="/profile"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
                   onClick={() => setMenuOpen(false)}
                 >
                   Editar Perfil
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100"
+                  className="block w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-950/50 rounded"
                 >
                   Cerrar Sesión
                 </button>
@@ -195,14 +195,14 @@ export default function Navbar() {
               <div className="space-y-2">
                 <Link
                   href="/login"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
                   onClick={() => setMenuOpen(false)}
                 >
                   Iniciar Sesión
                 </Link>
                 <Link
                   href="/register"
-                  className="block px-4 py-2 text-sm text-blue-600 font-semibold hover:bg-gray-100"
+                  className="block px-4 py-2 text-sm text-cyan-400 font-semibold hover:bg-purple-900/50 rounded"
                   onClick={() => setMenuOpen(false)}
                 >
                   Registrarse
