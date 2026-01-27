@@ -176,7 +176,7 @@ export default function PublishPage() {
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-950 via-purple-950 to-gray-950">
         <div className="text-center">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-600 border-t-transparent mx-auto"></div>
-          <p className="mt-4 text-gray-400">Cargando...</p>
+          <p className="mt-4 text-gray-200">Cargando...</p>
         </div>
       </div>
     );
@@ -193,7 +193,7 @@ export default function PublishPage() {
           <h1 className="mt-4 text-4xl font-bold text-white">
             Publicar Propiedad
           </h1>
-          <p className="mt-2 text-gray-400">
+          <p className="mt-2 text-gray-200">
             Completa los datos de tu propiedad para publicarla
           </p>
         </div>
@@ -216,7 +216,7 @@ export default function PublishPage() {
 
               {/* Título */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-100 mb-2">
                   Título de la propiedad *
                 </label>
                 <input
@@ -231,7 +231,7 @@ export default function PublishPage() {
 
               {/* Descripción */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-100 mb-2">
                   Descripción *
                 </label>
                 <textarea
@@ -246,7 +246,7 @@ export default function PublishPage() {
 
               {/* Tipo de propiedad */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-100 mb-2">
                   Tipo de propiedad *
                 </label>
                 <select
@@ -277,7 +277,7 @@ export default function PublishPage() {
 
               {/* Dirección */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-100 mb-2">
                   Dirección *
                 </label>
                 <input
@@ -292,7 +292,7 @@ export default function PublishPage() {
 
               {/* Ciudad */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-100 mb-2">
                   Ciudad *
                 </label>
                 <input
@@ -307,8 +307,8 @@ export default function PublishPage() {
 
               {/* Teléfonos */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Números de Celular * 📱 (máx. 3)
+                <label className="block text-sm font-medium text-gray-100 mb-2">
+                  Números de Celular * (máx. 3)
                 </label>
                 <div className="space-y-2">
                   {formData.phones.map((phone, idx) => (
@@ -346,7 +346,7 @@ export default function PublishPage() {
                   >
                     + Agregar otro número
                   </button>
-                  <p className="mt-1 text-xs text-gray-400">
+                  <p className="mt-1 text-xs text-gray-200">
                     Formato: 10 dígitos (ej: 0987654321). Estos números se mostrarán a los interesados en tu propiedad para que puedan contactarte.
                   </p>
                 </div>
@@ -362,7 +362,7 @@ export default function PublishPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Huéspedes */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-100 mb-2">
                     Número de huéspedes *
                   </label>
                   <input
@@ -377,7 +377,7 @@ export default function PublishPage() {
 
                 {/* Habitaciones */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-100 mb-2">
                     Número de habitaciones *
                   </label>
                   <input
@@ -392,7 +392,7 @@ export default function PublishPage() {
 
                 {/* Camas */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-100 mb-2">
                     Número de camas *
                   </label>
                   <input
@@ -407,7 +407,7 @@ export default function PublishPage() {
 
                 {/* Baños */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-100 mb-2">
                     Número de baños *
                   </label>
                   <input
@@ -427,7 +427,7 @@ export default function PublishPage() {
               <h2 className="text-2xl font-bold text-white mb-4">Imágenes</h2>
               
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-100 mb-2">
                   Fotos de la propiedad
                 </label>
                 <input
@@ -437,7 +437,7 @@ export default function PublishPage() {
                   onChange={handleImageSelect}
                   className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
                 />
-                <p className="mt-2 text-sm text-gray-400">
+                <p className="mt-2 text-sm text-gray-200">
                   Puedes subir hasta 10 imágenes. Formatos: JPG, PNG, WEBP
                 </p>
               </div>
@@ -445,7 +445,7 @@ export default function PublishPage() {
               {/* Preview de imágenes */}
               {previewUrls.length > 0 && (
                 <div className="mt-4">
-                  <p className="text-sm font-medium text-gray-300 mb-3">
+                  <p className="text-sm font-medium text-gray-100 mb-3">
                     {previewUrls.length} imagen{previewUrls.length > 1 ? 'es' : ''} seleccionada{previewUrls.length > 1 ? 's' : ''}
                   </p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -480,11 +480,11 @@ export default function PublishPage() {
               <h2 className="text-2xl font-bold text-white mb-4">Precio</h2>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-100 mb-2">
                   Precio por noche (USD) *
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-3 text-gray-400 text-lg">$</span>
+                  <span className="absolute left-4 top-3 text-gray-300 text-lg">$</span>
                   <input
                     type="number"
                     required
@@ -496,7 +496,7 @@ export default function PublishPage() {
                     placeholder="50.00"
                   />
                 </div>
-                <p className="mt-2 text-sm text-gray-400">
+                <p className="mt-2 text-sm text-gray-200">
                   Establece un precio competitivo para tu propiedad
                 </p>
               </div>
@@ -507,7 +507,7 @@ export default function PublishPage() {
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="flex-1 rounded-lg border-2 border-purple-500/50 px-6 py-3 font-semibold text-gray-300 transition-colors hover:bg-purple-950/30"
+                className="flex-1 rounded-lg border-2 border-purple-500/50 px-6 py-3 font-semibold text-gray-100 transition-colors hover:bg-purple-950/30"
               >
                 Cancelar
               </button>
