@@ -15,10 +15,10 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
   return (
     <PropertyImageLightbox images={images} title={title}>
       {(open) => (
-        <div className="mb-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
-          {/* Imagen principal */}
+        <div className="mb-8 grid grid-cols-1 gap-4 lg:grid-cols-4">
+          {/* Imagen principal - ocupa más espacio */}
           {mainImage && (
-            <div className="relative h-96 w-full overflow-hidden rounded-lg lg:col-span-1 lg:row-span-2 cursor-pointer" onClick={() => open(0)}>
+            <div className="relative aspect-square lg:col-span-2 lg:row-span-2 overflow-hidden rounded-lg cursor-pointer" onClick={() => open(0)}>
               <Image
                 src={mainImage.image_url}
                 alt={title}
@@ -30,11 +30,11 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
             </div>
           )}
 
-          {/* Imágenes secundarias */}
+          {/* Imágenes secundarias - se adaptan a su proporción */}
           {otherImages.slice(0, 4).map((image, idx) => (
             <div
               key={image.id}
-              className="relative h-44 w-full overflow-hidden rounded-lg cursor-pointer"
+              className="relative aspect-square overflow-hidden rounded-lg cursor-pointer"
               onClick={() => open(idx + 1)}
             >
               <Image

@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Havela - Tu plataforma de alojamientos",
   description: "Havela es tu plataforma de confianza para encontrar alojamientos únicos. Descubre espacios perfectos para tus vacaciones o estadías.",
+  icons: {
+    icon: "/logo/havela_logo.jpeg",
+  },
 };
 
 export default function RootLayout({

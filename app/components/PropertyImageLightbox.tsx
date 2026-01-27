@@ -25,10 +25,10 @@ export default function PropertyImageLightbox({ images, title, children }: Prope
     <>
       {children(openLightbox)}
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-          <button className="absolute top-6 right-8 text-white text-3xl font-bold" onClick={close} aria-label="Cerrar">×</button>
-          <button className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl" onClick={prev} aria-label="Anterior">‹</button>
-          <div className="relative w-[95vw] max-w-5xl md:max-w-[75vw] h-[80vh] flex items-center justify-center p-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80" onClick={close}>
+          <button className="absolute top-6 right-8 text-white text-3xl font-bold hover:scale-110 transition" onClick={(e) => { e.stopPropagation(); close(); }} aria-label="Cerrar">×</button>
+          <button className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl hover:scale-110 transition" onClick={(e) => { e.stopPropagation(); prev(); }} aria-label="Anterior">‹</button>
+          <div className="relative w-[95vw] max-w-5xl md:max-w-[75vw] h-[80vh] flex items-center justify-center p-2 cursor-default" onClick={(e) => e.stopPropagation()}>
             <Image
               src={images[current].image_url}
               alt={`${title} - imagen ${current + 1}`}
@@ -37,7 +37,7 @@ export default function PropertyImageLightbox({ images, title, children }: Prope
               priority
             />
           </div>
-          <button className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl" onClick={next} aria-label="Siguiente">›</button>
+          <button className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl hover:scale-110 transition" onClick={(e) => { e.stopPropagation(); next(); }} aria-label="Siguiente">›</button>
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
             {images.map((img, idx) => (
               <button

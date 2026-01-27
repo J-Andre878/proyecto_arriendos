@@ -3,7 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import ThemeToggle from "./ThemeToggle";
+import Image from "next/image";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -35,12 +35,19 @@ export default function Navbar() {
 
   return (
     <nav className="border-b border-purple-500/30 dark:border-purple-500/30 bg-white/10 dark:bg-white/10 backdrop-blur-sm sticky top-0 z-50">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo y Theme Toggle */}
+      <div className="mx-auto max-w-[92.5rem] px-3 sm:px-4 lg:px-6">
+        <div className="flex h-20 items-center justify-between">
+          {/* Logo */}
           <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <Link href="/" className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-violet-600 to-cyan-500 dark:from-violet-400 dark:via-purple-400 dark:to-cyan-300 hover:from-purple-700 hover:to-cyan-600 dark:hover:from-violet-300 dark:hover:to-cyan-200 transition-all">
+            <Image
+              src="/logo/havela_logo.jpeg"
+              alt="Havela Logo"
+              width={50}
+              height={50}
+              className="rounded-lg"
+              priority
+            />
+            <Link href="/" className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-violet-600 to-cyan-500 dark:from-violet-400 dark:via-purple-400 dark:to-cyan-300 hover:from-purple-700 hover:to-cyan-600 dark:hover:from-violet-300 dark:hover:to-cyan-200 transition-all">
               Havela
             </Link>
           </div>
@@ -53,24 +60,24 @@ export default function Navbar() {
               <>
                 <Link
                   href="/publish"
-                  className="text-sm rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-violet-500 dark:to-cyan-400 px-5 py-2 font-bold text-white shadow-md transition-all duration-200 hover:from-purple-700 hover:to-cyan-600 hover:shadow-lg flex items-center"
+                  className="text-base rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-violet-500 dark:to-cyan-400 px-6 py-3 font-bold text-white shadow-md transition-all duration-200 hover:from-purple-700 hover:to-cyan-600 hover:shadow-lg flex items-center"
                 >
                   Publicar Propiedad
                 </Link>
                 <div className="relative" ref={menuRef}>
                   <button
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="flex items-center gap-2 rounded-lg border border-purple-300 dark:border-purple-700 px-3 py-1 bg-white/10 dark:bg-white/10 shadow-md transition-all duration-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:shadow-lg group text-sm"
+                    className="flex items-center gap-3 rounded-lg border border-purple-300 dark:border-purple-700 px-4 py-2 bg-white/10 dark:bg-white/10 shadow-md transition-all duration-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:shadow-lg group text-base font-semibold"
                   >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-violet-500 dark:to-cyan-400 text-white font-bold text-sm shadow group-hover:scale-110 group-hover:ring-2 group-hover:ring-purple-300 dark:group-hover:ring-purple-700 transition-transform duration-200">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-violet-500 dark:to-cyan-400 text-white font-bold text-base shadow group-hover:scale-110 group-hover:ring-2 group-hover:ring-purple-300 dark:group-hover:ring-purple-700 transition-transform duration-200">
                       {session.user?.name?.charAt(0).toUpperCase() || "U"}
                     </div>
-                    <span className="font-semibold text-gray-800 dark:text-gray-200 text-sm group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors duration-200">{session.user?.name || session.user?.email}</span>
+                    <span className="font-semibold text-gray-800 dark:text-gray-200 text-base group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors duration-200">{session.user?.name || session.user?.email}</span>
                   </button>
 
                   {/* Dropdown */}
                   {menuOpen && (
-                    <div className="absolute right-0 mt-2 w-64 rounded-xl bg-white/10 dark:bg-white/10 shadow-xl border border-purple-500/30 dark:border-purple-500/30 z-20 overflow-hidden">
+                    <div className="absolute right-0 mt-2 w-64 rounded-xl bg-purple-950/85 dark:bg-purple-950/90 shadow-xl border border-purple-500/30 dark:border-purple-500/30 z-20 overflow-hidden">
                       <Link
                         href="/my-properties"
                         className="block px-5 py-3 text-base font-semibold text-gray-900 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-800 hover:text-purple-700 dark:hover:text-purple-400 transition-colors border-b border-gray-100 dark:border-gray-800"
@@ -106,13 +113,13 @@ export default function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2 font-semibold text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-2 font-bold text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-base"
                 >
                   Iniciar Sesión
                 </Link>
                 <Link
                   href="/register"
-                  className="rounded-lg bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-violet-500 dark:to-cyan-400 px-4 py-2 font-semibold text-white transition-all hover:shadow-lg"
+                  className="rounded-lg bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-violet-500 dark:to-cyan-400 px-5 py-2 font-bold text-white transition-all hover:shadow-lg text-base"
                 >
                   Registrarse
                 </Link>

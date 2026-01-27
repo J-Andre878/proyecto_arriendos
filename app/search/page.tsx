@@ -130,7 +130,7 @@ function SearchPageContent() {
     <div className="min-h-screen bg-gray-900/50">
       <Navbar />
 
-      <main className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-[92.5rem] px-3 py-24 sm:px-4 lg:px-6">
         {/* Título */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white">Buscar Propiedades</h1>
@@ -140,12 +140,12 @@ function SearchPageContent() {
         {/* Formulario de filtros */}
         <form
           onSubmit={handleSearch}
-          className="mb-12 rounded-2xl bg-white/10 backdrop-blur-sm p-4 sm:p-6 lg:p-8 shadow-lg"
+          className="mb-12 rounded-2xl bg-white/10 backdrop-blur-sm p-6 lg:p-8 shadow-lg"
         >
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {/* Provincia */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">
+              <label className="block text-sm font-semibold text-gray-200 mb-2">
                 Provincia
               </label>
               <input
@@ -154,13 +154,13 @@ function SearchPageContent() {
                 placeholder="Ej: Loja"
                 value={filters.province}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-purple-500/50 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Ciudad */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">
+              <label className="block text-sm font-semibold text-gray-200 mb-2">
                 Ciudad
               </label>
               <input
@@ -169,24 +169,24 @@ function SearchPageContent() {
                 placeholder="Ej: Loja"
                 value={filters.city}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-purple-500/50 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Tipo de propiedad */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">
-                Tipo de propiedad
+              <label className="block text-sm font-semibold text-gray-200 mb-2">
+                Tipo de Propiedad
               </label>
               <select
                 name="propertyType"
                 value={filters.propertyType}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-purple-500/50 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-gray-900/50 appearance-none cursor-pointer"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-sm text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-gray-900/50 appearance-none cursor-pointer"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23d1d5db' d='M1 4l5 5 5-5'/%3E%3C/svg%3E")`,
                   backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'right 0.75rem center',
+                  backgroundPosition: 'right 1rem center',
                   paddingRight: '2.5rem',
                 }}
               >
@@ -202,26 +202,24 @@ function SearchPageContent() {
 
             {/* Número de huéspedes */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">
-                <span className="hidden sm:inline">Número de huéspedes</span>
-                <span className="sm:hidden">Huéspedes</span>
+              <label className="block text-sm font-semibold text-gray-200 mb-2">
+                Huéspedes
               </label>
               <input
                 type="number"
                 name="numGuests"
-                placeholder="Ej: 2"
+                placeholder="Ej: 4"
                 min="1"
                 value={filters.numGuests}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-purple-500/50 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Número de habitaciones */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">
-                <span className="hidden sm:inline">Número de habitaciones</span>
-                <span className="sm:hidden">Habitaciones</span>
+              <label className="block text-sm font-semibold text-gray-200 mb-2">
+                Habitaciones
               </label>
               <input
                 type="number"
@@ -230,15 +228,14 @@ function SearchPageContent() {
                 min="1"
                 value={filters.numRooms}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-purple-500/50 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Número de camas */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">
-                <span className="hidden sm:inline">Número de camas</span>
-                <span className="sm:hidden">Camas</span>
+              <label className="block text-sm font-semibold text-gray-200 mb-2">
+                Camas
               </label>
               <input
                 type="number"
@@ -247,15 +244,14 @@ function SearchPageContent() {
                 min="1"
                 value={filters.numBeds}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-purple-500/50 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Número de baños */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">
-                <span className="hidden sm:inline">Número de baños</span>
-                <span className="sm:hidden">Baños</span>
+              <label className="block text-sm font-semibold text-gray-200 mb-2">
+                Baños
               </label>
               <input
                 type="number"
@@ -264,63 +260,60 @@ function SearchPageContent() {
                 min="1"
                 value={filters.numBathrooms}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-purple-500/50 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Precio mínimo */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">
-                <span className="hidden sm:inline">Precio mínimo</span>
-                <span className="sm:hidden">P. Mín</span>
+              <label className="block text-sm font-semibold text-gray-200 mb-2">
+                Precio Mínimo
               </label>
               <input
                 type="number"
                 name="minPrice"
-                placeholder="Ej: 20"
+                placeholder="Ej: $20"
                 min="0"
                 step="0.01"
                 value={filters.minPrice}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-purple-500/50 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
 
             {/* Precio máximo */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">
-                <span className="hidden sm:inline">Precio máximo</span>
-                <span className="sm:hidden">P. Máx</span>
+              <label className="block text-sm font-semibold text-gray-200 mb-2">
+                Precio Máximo
               </label>
               <input
                 type="number"
                 name="maxPrice"
-                placeholder="Ej: 100"
+                placeholder="Ej: $500"
                 min="0"
                 step="0.01"
                 value={filters.maxPrice}
                 onChange={handleFilterChange}
-                className="w-full rounded-lg border border-purple-500/50 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-sm text-white placeholder-gray-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
           </div>
 
           {/* Botones de acción */}
-          <div className="mt-6 sm:mt-8 flex gap-2 sm:gap-4">
+          <div className="mt-8 flex gap-4">
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 rounded-lg bg-purple-600 px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-purple-700 disabled:bg-gray-400"
+              className="flex-1 rounded-lg bg-purple-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-purple-700 disabled:bg-gray-400"
             >
-              {loading ? "Buscando..." : "🔍 Buscar"}
+              {loading ? "Buscando..." : "🔍 Buscar Propiedades"}
             </button>
             <button
               type="button"
               onClick={handleReset}
-              className="flex-1 rounded-lg border-2 border-purple-500/50 px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-gray-300 transition-colors hover:bg-white/5"
+              className="flex-1 rounded-lg border-2 border-purple-500/50 px-6 py-3 text-base font-semibold text-gray-300 transition-colors hover:bg-white/5"
             >
-              <span className="hidden sm:inline">Limpiar Filtros</span>
-              <span className="sm:hidden">Limpiar</span>
+              Limpiar Filtros
             </button>
           </div>
         </form>

@@ -37,7 +37,7 @@ export default async function Home() {
 
       {/* Header / Hero Section */}
       <header className="bg-gradient-to-br from-purple-600 via-violet-600 to-cyan-500 dark:from-gray-900 dark:via-purple-950 dark:to-cyan-900 text-white">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[92.5rem] px-3 py-16 sm:px-4 lg:px-6">
           <div className="text-center">
             <h1 className="text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl bg-gradient-to-r from-white to-purple-100 dark:from-white dark:to-purple-200 bg-clip-text text-transparent">
               Havela
@@ -54,7 +54,7 @@ export default async function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-[92.5rem] px-3 py-12 sm:px-4 lg:px-6">
         {/* Título de sección */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -115,7 +115,7 @@ export default async function Home() {
 
       {/* Footer simple */}
       <footer className="mt-20 border-t border-purple-500/30 dark:border-purple-500/30 bg-white/10 dark:bg-white/10">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[92.5rem] px-3 py-8 sm:px-4 lg:px-6">
           <p className="text-center text-gray-500 dark:text-gray-400">
             © 2026 Havela. Todos los derechos reservados.
           </p>
