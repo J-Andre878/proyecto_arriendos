@@ -19,7 +19,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [phoneError, setPhoneError] = useState("");
-  const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -38,9 +38,9 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
 
-    // Validar aceptación de políticas
-    if (!acceptedPrivacy) {
-      setError("Debes aceptar la Política de Privacidad para continuar");
+    // Validar aceptación de políticas y términos
+    if (!acceptedTerms) {
+      setError("Debes aceptar la Política de Privacidad y Términos y Condiciones para continuar");
       return;
     }
 
@@ -226,16 +226,16 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Aceptar Política de Privacidad */}
+            {/* Aceptar Política de Privacidad y Términos y Condiciones */}
             <div className="flex items-start gap-3">
               <input
-                id="privacy"
+                id="terms"
                 type="checkbox"
-                checked={acceptedPrivacy}
-                onChange={(e) => setAcceptedPrivacy(e.target.checked)}
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
                 className="mt-1 w-4 h-4 rounded border-purple-500/50 bg-gray-900/50 text-purple-600 cursor-pointer"
               />
-              <label htmlFor="privacy" className="text-sm text-gray-300 cursor-pointer">
+              <label htmlFor="terms" className="text-sm text-gray-300 cursor-pointer">
                 Acepto la{" "}
                 <Link
                   href="/privacy-policy"
@@ -244,6 +244,15 @@ export default function RegisterPage() {
                   className="text-purple-400 hover:text-purple-300 underline"
                 >
                   Política de Privacidad
+                </Link>
+                {" "}y{" "}
+                <Link
+                  href="/terms-conditions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple-400 hover:text-purple-300 underline"
+                >
+                  Términos y Condiciones
                 </Link>
                 {" "}de Havela *
               </label>
