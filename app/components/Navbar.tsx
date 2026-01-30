@@ -99,6 +99,15 @@ export default function Navbar() {
                       >
                         Editar Perfil
                       </Link>
+                      <Link
+                        href="/privacy-policy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block px-5 py-3 text-base font-semibold text-gray-900 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-800 hover:text-purple-700 dark:hover:text-purple-400 transition-colors border-b border-gray-100 dark:border-gray-800"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        Política de Privacidad
+                      </Link>
                       <button
                         onClick={handleLogout}
                         className="block w-full px-5 py-3 text-left text-base font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
@@ -184,6 +193,15 @@ export default function Navbar() {
                 >
                   Editar Perfil
                 </Link>
+                <Link
+                  href="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Política de Privacidad
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="block w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-950/50 rounded"
@@ -206,6 +224,15 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                 >
                   Registrarse
+                </Link>
+                <Link
+                  href="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Política de Privacidad
                 </Link>
               </div>
             )}

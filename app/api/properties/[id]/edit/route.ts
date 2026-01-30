@@ -34,6 +34,7 @@ export async function PUT(
       price_per_night,
       property_type,
       images,
+      amenities,
     } = body;
 
     // Verificar que la propiedad existe y pertenece al usuario
@@ -142,6 +143,25 @@ export async function PUT(
         is_primary: idx === 0,
       })),
     });
+
+    // Actualizar amenidades si se enviaron
+    if (amenities && Array.isArray(amenities)) {
+      // Eliminar amenidades antiguas
+      await prisma.property_amenities.deleteMany({
+        where: { property_id: propertyId },
+      });
+
+      // Crear nuevas amenidades si hay
+      if (amenities.length > 0) {
+        await prisma.property_amenities.createMany({
+          data: amenities.map((amenity_id: number) => ({
+            property_id: propertyId,
+            amenity_id,
+          })),
+          skipDuplicates: true,
+        });
+      }
+    }
 
     return NextResponse.json({
       success: true,

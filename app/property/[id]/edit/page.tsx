@@ -19,6 +19,8 @@ export default function EditPropertyPage() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [existingImages, setExistingImages] = useState<Array<{id: number, image_url: string, is_main: boolean}>>([]);
+  const [availableAmenities, setAvailableAmenities] = useState<{id: number, name: string, category?: string, icon?: string}[]>([]);
+  const [selectedAmenities, setSelectedAmenities] = useState<number[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -60,6 +62,10 @@ export default function EditPropertyPage() {
           });
           setPhoneErrors(property.property_phones?.map(() => "") || [""]);
           setExistingImages(property.property_images || []);
+          // Cargar amenidades de la propiedad
+          if (property.property_amenities) {
+            setSelectedAmenities(property.property_amenities.map((pa: any) => pa.amenity_id));
+          }
         } else {
           setError("No se pudo cargar la propiedad");
         }
@@ -80,6 +86,19 @@ export default function EditPropertyPage() {
     if (status === "unauthenticated") {
       router.push("/login");
     }
+    // Cargar amenidades disponibles
+    const fetchAmenities = async () => {
+      try {
+        const response = await fetch("/api/amenities");
+        const data = await response.json();
+        if (data.success && data.amenities) {
+          setAvailableAmenities(data.amenities);
+        }
+      } catch (err) {
+        console.error("Error cargando amenidades:", err);
+      }
+    };
+    fetchAmenities();
   }, [status, router]);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -207,6 +226,7 @@ export default function EditPropertyPage() {
           price_per_night: parseFloat(formData.price_per_night.toString()),
           images: allImages,
           phone: formData.phones,
+          amenities: selectedAmenities,
         }),
       });
 
@@ -486,6 +506,45 @@ export default function EditPropertyPage() {
                   placeholder="Ej: 50.00"
                 />
               </div>
+            </div>
+
+            {/* Imágenes */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold text-white">Amenidades</h2>
+
+              {availableAmenities.length > 0 ? (
+                <div>
+                  <p className="text-sm text-gray-200 mb-4">
+                    Selecciona las amenidades que incluye tu propiedad
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {availableAmenities.map((amenity) => (
+                      <label
+                        key={amenity.id}
+                        className="flex items-center gap-3 p-3 rounded-lg border border-purple-500/50 bg-purple-950/30 hover:bg-purple-950/50 cursor-pointer transition-colors"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedAmenities.includes(amenity.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedAmenities([...selectedAmenities, amenity.id]);
+                            } else {
+                              setSelectedAmenities(selectedAmenities.filter(id => id !== amenity.id));
+                            }
+                          }}
+                          className="w-4 h-4 rounded border-purple-500/50 bg-white/10 text-purple-600 cursor-pointer"
+                        />
+                        <span className="text-gray-100 text-sm">
+                          {amenity.name}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-gray-300 text-sm">Cargando amenidades...</p>
+              )}
             </div>
 
             {/* Imágenes */}

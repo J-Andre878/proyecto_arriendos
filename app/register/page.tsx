@@ -19,6 +19,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [phoneError, setPhoneError] = useState("");
+  const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -36,6 +37,12 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // Validar aceptación de políticas
+    if (!acceptedPrivacy) {
+      setError("Debes aceptar la Política de Privacidad para continuar");
+      return;
+    }
 
     // Validar que las contraseñas coincidan
     if (formData.password !== formData.confirmPassword) {
@@ -217,6 +224,29 @@ export default function RegisterPage() {
                 className="mt-1 block w-full rounded-lg border border-purple-500/50 bg-gray-900/50 px-4 py-2.5 text-white placeholder-gray-500 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                 placeholder="••••••••"
               />
+            </div>
+
+            {/* Aceptar Política de Privacidad */}
+            <div className="flex items-start gap-3">
+              <input
+                id="privacy"
+                type="checkbox"
+                checked={acceptedPrivacy}
+                onChange={(e) => setAcceptedPrivacy(e.target.checked)}
+                className="mt-1 w-4 h-4 rounded border-purple-500/50 bg-gray-900/50 text-purple-600 cursor-pointer"
+              />
+              <label htmlFor="privacy" className="text-sm text-gray-300 cursor-pointer">
+                Acepto la{" "}
+                <Link
+                  href="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple-400 hover:text-purple-300 underline"
+                >
+                  Política de Privacidad
+                </Link>
+                {" "}de Havela *
+              </label>
             </div>
 
             {/* Botón submit */}

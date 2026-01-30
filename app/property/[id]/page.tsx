@@ -33,6 +33,11 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
       property_phones: {
         orderBy: [{ is_primary: "desc" }, { id: "asc" }],
       },
+      property_amenities: {
+        include: {
+          amenities: true,
+        },
+      },
     },
   });
 
@@ -107,6 +112,22 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 {property.description || "Sin descripción disponible."}
               </p>
             </div>
+
+            {/* Amenidades */}
+            {property.property_amenities && property.property_amenities.length > 0 && (
+              <div className="rounded-lg bg-white/10 p-8 shadow-md mb-8">
+                <h2 className="text-3xl font-bold text-white mb-6">Amenidades</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {property.property_amenities.map((pa) => (
+                    <div key={pa.id} className="flex items-center gap-3 p-4 rounded-lg border border-purple-500/30 bg-purple-950/30">
+                      <span className="text-gray-100 font-medium">
+                        ✓ {pa.amenities.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Ubicación */}
             <div className="rounded-lg bg-white/10 p-8 shadow-md">

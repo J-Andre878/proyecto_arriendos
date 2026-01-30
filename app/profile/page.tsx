@@ -39,9 +39,8 @@ export default function ProfilePage() {
         email: session.user.email || "",
         phone: (session.user as any).phone || "",
       });
-      setProfileImage((session.user as any).image || null);
       
-      // Cargar información de si tiene contraseña
+      // Cargar información de si tiene contraseña y obtener imagen de perfil
       const fetchProfileInfo = async () => {
         try {
           const response = await fetch("/api/profile");
@@ -49,6 +48,8 @@ export default function ProfilePage() {
           if (data.user) {
             setHasPassword(data.user.hasPassword);
             setAuthProvider(data.user.auth_provider);
+            // Mostrar profile_image_url si existe, sino usar avatar_url (de Google)
+            setProfileImage(data.user.profile_image_url || data.user.avatar_url || null);
           }
         } catch (err) {
           console.error("Error fetching profile info:", err);

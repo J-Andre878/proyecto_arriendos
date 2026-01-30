@@ -17,6 +17,8 @@ export default function PublishPage() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [uploadedImages, setUploadedImages] = useState<{url: string, public_id: string}[]>([]);
+  const [availableAmenities, setAvailableAmenities] = useState<{id: number, name: string, category?: string, icon?: string}[]>([]);
+  const [selectedAmenities, setSelectedAmenities] = useState<number[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -36,6 +38,19 @@ export default function PublishPage() {
     if (status === "unauthenticated") {
       router.push("/login");
     }
+    // Cargar amenidades disponibles
+    const fetchAmenities = async () => {
+      try {
+        const response = await fetch("/api/amenities");
+        const data = await response.json();
+        if (data.success && data.amenities) {
+          setAvailableAmenities(data.amenities);
+        }
+      } catch (err) {
+        console.error("Error cargando amenidades:", err);
+      }
+    };
+    fetchAmenities();
   }, [status, router]);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,6 +168,7 @@ export default function PublishPage() {
           ...formData,
           price_per_night: parseFloat(formData.price_per_night),
           images: imageUrls,
+          amenities: selectedAmenities,
         }),
       });
 
@@ -436,6 +452,45 @@ export default function PublishPage() {
                   />
                 </div>
               </div>
+            </div>
+
+            {/* Imágenes */}
+            <div className="border-b border-purple-500/30 pb-6">
+              <h2 className="text-2xl font-bold text-white mb-4">Amenidades</h2>
+
+              {availableAmenities.length > 0 ? (
+                <div>
+                  <p className="text-sm text-gray-200 mb-4">
+                    Selecciona las amenidades que incluye tu propiedad
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {availableAmenities.map((amenity) => (
+                      <label
+                        key={amenity.id}
+                        className="flex items-center gap-3 p-3 rounded-lg border border-purple-500/50 bg-purple-950/30 hover:bg-purple-950/50 cursor-pointer transition-colors"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedAmenities.includes(amenity.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedAmenities([...selectedAmenities, amenity.id]);
+                            } else {
+                              setSelectedAmenities(selectedAmenities.filter(id => id !== amenity.id));
+                            }
+                          }}
+                          className="w-4 h-4 rounded border-purple-500/50 bg-white/10 text-purple-600 cursor-pointer"
+                        />
+                        <span className="text-gray-100 text-sm">
+                          {amenity.name}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-gray-300 text-sm">Cargando amenidades...</p>
+              )}
             </div>
 
             {/* Imágenes */}

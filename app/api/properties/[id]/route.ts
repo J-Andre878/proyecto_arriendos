@@ -26,6 +26,11 @@ export async function GET(
         },
         property_phones: {
           orderBy: [{ is_primary: "desc" }, { id: "asc" }]
+        },
+        property_amenities: {
+          include: {
+            amenities: true
+          }
         }
       }
     });

@@ -333,6 +333,7 @@ model users {
   phone                                String?                  @db.VarChar(20)
   password                             String?
   avatar_url                           String?
+  profile_image_url                    String?
   auth_provider                        String                   @default("local") @db.VarChar(50)
   is_active                            Boolean?                 @default(true)
   role_id                              Int                      @default(1)

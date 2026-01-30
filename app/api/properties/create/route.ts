@@ -29,6 +29,7 @@ export async function POST(request: Request) {
       price_per_night,
       property_type,
       images,
+      amenities,
     } = body;
 
 
@@ -121,6 +122,17 @@ export async function POST(request: Request) {
           is_main: index === 0, // Primera imagen es la principal
           display_order: index + 1,
         })),
+      });
+    }
+
+    // Guardar amenidades si se enviaron
+    if (amenities && Array.isArray(amenities) && amenities.length > 0) {
+      await prisma.property_amenities.createMany({
+        data: amenities.map((amenity_id: number) => ({
+          property_id: property.id,
+          amenity_id,
+        })),
+        skipDuplicates: true, // Evitar duplicados si los hay
       });
     }
 

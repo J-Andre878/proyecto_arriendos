@@ -13,13 +13,13 @@ export async function PUT(request: Request) {
 
     const { name, phone, image } = await request.json();
 
-    // Actualizar usuario
+    // Actualizar usuario - guardar foto de perfil en profile_image_url (no en avatar_url que es de Google)
     const user = await prisma.users.update({
       where: { email: session.user.email },
       data: {
         name: name || undefined,
         phone: phone || undefined,
-        avatar_url: image || undefined,
+        profile_image_url: image || undefined,
       },
     });
 
@@ -30,6 +30,7 @@ export async function PUT(request: Request) {
         name: user.name,
         email: user.email,
         phone: user.phone,
+        profile_image_url: user.profile_image_url,
         avatar_url: user.avatar_url,
       },
     });
@@ -58,6 +59,7 @@ export async function GET(request: Request) {
         email: true,
         phone: true,
         avatar_url: true,
+        profile_image_url: true,
         password: true,
         auth_provider: true,
       },
