@@ -1,4 +1,9 @@
 {
+  "buildCommand": "npm run build",
+  "installCommand": "npm install --prefer-offline",
+  "env": {
+    "NEXT_TELEMETRY_DISABLED": "1"
+  },
   "crons": [
     {
       "path": "/api/cron/expire-properties",

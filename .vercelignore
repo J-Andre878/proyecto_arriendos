@@ -1,0 +1,17 @@
+.env.local
+.env.*.local
+.git
+.gitignore
+node_modules
+npm-debug.log
+.next
+.vercelignore
+README.md
+DEPLOYMENT_SUMMARY.txt
+GOOGLE_OAUTH_GUIDE.md
+PAYPAL_SETUP.md
+STRIPE_SETUP.md
+CRON_SETUP.md
+QUICK_TEST_GUIDE.md
+CHECKLIST_PRODUCCION.md
+database_backup_*.sql
