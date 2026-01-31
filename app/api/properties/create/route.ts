@@ -41,6 +41,14 @@ export async function POST(request: Request) {
       );
     }
 
+    // Validar que haya al menos una imagen
+    if (!images || !Array.isArray(images) || images.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "Debe subir al menos una imagen para publicar" },
+        { status: 400 }
+      );
+    }
+
     if (price_per_night <= 0) {
       return NextResponse.json(
         { success: false, error: "El precio debe ser mayor a 0" },

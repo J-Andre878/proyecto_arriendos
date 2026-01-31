@@ -13,14 +13,21 @@ export async function PUT(request: Request) {
 
     const { name, phone, image } = await request.json();
 
-    // Actualizar usuario - guardar foto de perfil en profile_image_url (no en avatar_url que es de Google)
+    // Preparar datos para actualizar
+    const updateData: any = {
+      ...(name && { name }),
+      ...(phone && { phone }),
+    };
+
+    // Solo actualizar profile_image_url si se proporciona una imagen válida
+    if (image) {
+      updateData.profile_image_url = image;
+    }
+
+    // Actualizar usuario
     const user = await prisma.users.update({
       where: { email: session.user.email },
-      data: {
-        name: name || undefined,
-        phone: phone || undefined,
-        profile_image_url: image || undefined,
-      },
+      data: updateData,
     });
 
     return NextResponse.json({
@@ -62,6 +69,7 @@ export async function GET(request: Request) {
         profile_image_url: true,
         password: true,
         auth_provider: true,
+        accepted_terms: true,
       },
     });
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { validatePhoneNumber } from "@/lib/phoneValidation";
+import { ECUADOR_PROVINCES } from "@/lib/ecuadorProvinces";
 
 export default function PublishPage() {
   const router = useRouter();
@@ -23,8 +24,8 @@ export default function PublishPage() {
     title: "",
     description: "",
     address: "",
-    province: "Loja",
-    city: "Loja",
+    province: "",
+    city: "",
     phones: [""],
     num_guests: 1,
     num_rooms: 1,
@@ -122,6 +123,13 @@ export default function PublishPage() {
     setSubmitting(true);
 
     try {
+      // Validar imágenes
+      if (selectedFiles.length === 0) {
+        setError("Debes subir al menos una imagen para publicar la propiedad");
+        setSubmitting(false);
+        return;
+      }
+
       // Validar teléfonos
       if (!formData.phones.length || formData.phones.some((p) => !p.trim())) {
         setError("Debes ingresar al menos un número de celular");
@@ -208,23 +216,16 @@ export default function PublishPage() {
             ← Volver al inicio
           </Link>
           <h1 className="mt-4 text-4xl font-bold text-white">
-            Publicar Propiedad
+            Publicar tu Arriendo
           </h1>
           <p className="mt-2 text-gray-200">
-            Completa los datos de tu propiedad para publicarla
+            Comparte tu propiedad con miles de personas en todo Ecuador 🇪🇨
           </p>
         </div>
 
         {/* Formulario */}
         <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-8 shadow-xl border border-purple-500/30">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Error */}
-            {error && (
-              <div className="rounded-lg bg-red-950/50 border border-red-500/50 p-4">
-                <p className="text-sm text-red-400">{error}</p>
-              </div>
-            )}
-
             {/* Información básica */}
             <div className="border-b border-purple-500/30 pb-6">
               <h2 className="text-2xl font-bold text-white mb-4">
@@ -312,14 +313,19 @@ export default function PublishPage() {
                 <label className="block text-sm font-medium text-gray-100 mb-2">
                   Provincia *
                 </label>
-                <input
-                  type="text"
+                <select
                   required
                   value={formData.province}
                   onChange={(e) => setFormData({ ...formData, province: e.target.value })}
-                  className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
-                  placeholder="Loja"
-                />
+                  className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-gray-900/50"
+                >
+                  <option value="" style={{backgroundColor: '#1f2937', color: '#ffffff'}}>Selecciona una provincia</option>
+                  {ECUADOR_PROVINCES.map((province) => (
+                    <option key={province} value={province} style={{backgroundColor: '#1f2937', color: '#ffffff'}}>
+                      {province}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Ciudad */}
@@ -333,7 +339,7 @@ export default function PublishPage() {
                   value={formData.city}
                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                   className="w-full rounded-lg border border-purple-500/50 px-4 py-3 text-white focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
-                  placeholder="Loja"
+                  placeholder="Ej: Loja, Cuenca, Quito..."
                 />
               </div>
 
@@ -572,6 +578,19 @@ export default function PublishPage() {
                 </p>
               </div>
             </div>
+
+            {/* Mensaje de error prominente */}
+            {error && (
+              <div className="rounded-lg bg-red-950/70 border-2 border-red-500/70 p-5 shadow-lg">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">⚠️</span>
+                  <div>
+                    <p className="font-semibold text-red-300 mb-1">No se puede publicar la propiedad</p>
+                    <p className="text-sm text-red-200">{error}</p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Botones */}
             <div className="flex gap-4 pt-6">

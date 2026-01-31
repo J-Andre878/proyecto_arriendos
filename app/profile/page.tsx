@@ -2,10 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import Image from "next/image";
+
+interface ConfirmDialogState {
+  open: boolean;
+  title: string;
+  message: string;
+  action: "delete_photo" | "delete_account" | null;
+}
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -16,9 +23,15 @@ export default function ProfilePage() {
   const [success, setSuccess] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [tab, setTab] = useState<"profile" | "password">("profile");
+  const [tab, setTab] = useState<"profile" | "password" | "danger">("profile");
   const [hasPassword, setHasPassword] = useState(false);
   const [authProvider, setAuthProvider] = useState<string>("local");
+  const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState>({
+    open: false,
+    title: "",
+    message: "",
+    action: null,
+  });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -48,8 +61,8 @@ export default function ProfilePage() {
           if (data.user) {
             setHasPassword(data.user.hasPassword);
             setAuthProvider(data.user.auth_provider);
-            // Mostrar profile_image_url si existe, sino usar avatar_url (de Google)
-            setProfileImage(data.user.profile_image_url || data.user.avatar_url || null);
+            // Mostrar SOLO profile_image_url (la foto que el usuario subió)
+            setProfileImage(data.user.profile_image_url || null);
           }
         } catch (err) {
           console.error("Error fetching profile info:", err);
@@ -117,6 +130,69 @@ export default function ProfilePage() {
     }
   };
 
+  const handleDeletePhoto = async () => {
+    setSubmitting(true);
+    setError("");
+    
+    try {
+      const response = await fetch("/api/profile/delete-photo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setProfileImage(null);
+        setSuccess("Foto de perfil eliminada correctamente");
+        setConfirmDialog({ open: false, title: "", message: "", action: null });
+        setTimeout(() => {
+          router.refresh();
+        }, 1500);
+      } else {
+        setError(data.error || "Error al eliminar la foto");
+      }
+    } catch (err) {
+      setError("Error al eliminar la foto");
+      console.error(err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setSubmitting(true);
+    setError("");
+    
+    try {
+      const response = await fetch("/api/profile/delete-account", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccess("Cuenta eliminada correctamente. Serás desconectado...");
+        setConfirmDialog({ open: false, title: "", message: "", action: null });
+        setTimeout(() => {
+          signOut({ callbackUrl: "/" });
+        }, 2000);
+      } else {
+        setError(data.error || "Error al eliminar la cuenta");
+      }
+    } catch (err) {
+      setError("Error al eliminar la cuenta");
+      console.error(err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
@@ -130,8 +206,10 @@ export default function ProfilePage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...formData,
-          image: profileImage,
+          name: formData.name,
+          phone: formData.phone,
+          // Solo enviar la imagen si existe, para no sobrescribir cambios
+          ...(profileImage && { image: profileImage }),
         }),
       });
 
@@ -234,7 +312,7 @@ export default function ProfilePage() {
             
             {/* Tabs */}
             <div className="mb-8 border-b border-purple-500/30">
-              <div className="flex gap-8">
+              <div className="flex gap-8 flex-wrap">
                 <button
                   onClick={() => {
                     setTab("profile");
@@ -262,6 +340,20 @@ export default function ProfilePage() {
                   }`}
                 >
                   Cambiar Contraseña
+                </button>
+                <button
+                  onClick={() => {
+                    setTab("danger");
+                    setError("");
+                    setSuccess("");
+                  }}
+                  className={`pb-4 font-semibold transition-colors ${
+                    tab === "danger"
+                      ? "border-b-2 border-red-500 text-white"
+                      : "text-gray-400 hover:text-gray-300"
+                  }`}
+                >
+                  Zona de Peligro
                 </button>
               </div>
             </div>
@@ -315,6 +407,20 @@ export default function ProfilePage() {
                         disabled={uploadingImage}
                         className="hidden"
                       />
+                      {profileImage && (
+                        <button
+                          type="button"
+                          onClick={() => setConfirmDialog({
+                            open: true,
+                            title: "Eliminar Foto de Perfil",
+                            message: "¿Estás seguro de que deseas eliminar tu foto de perfil? Esta acción no se puede deshacer.",
+                            action: "delete_photo"
+                          })}
+                          className="ml-2 inline-block rounded-lg bg-red-600 px-4 py-2 font-semibold text-white transition-all hover:bg-red-700"
+                        >
+                          Eliminar Foto
+                        </button>
+                      )}
                       <p className="mt-2 text-xs text-gray-500">
                         Máximo 5MB. Formatos: JPG, PNG, GIF
                       </p>
@@ -491,7 +597,98 @@ export default function ProfilePage() {
                 </div>
               </form>
             )}
+
+            {/* Tab: Zona de Peligro */}
+            {tab === "danger" && (
+              <div className="space-y-6">
+                {error && (
+                  <div className="rounded-lg bg-red-950/50 border border-red-500/50 p-4">
+                    <p className="text-sm text-red-400">{error}</p>
+                  </div>
+                )}
+
+                {success && (
+                  <div className="rounded-lg bg-green-950/50 border border-green-500/50 p-4">
+                    <p className="text-sm text-green-400">{success}</p>
+                  </div>
+                )}
+
+                <div className="rounded-lg border border-red-500/50 bg-red-950/30 p-6">
+                  <h3 className="text-lg font-bold text-red-400 mb-4">
+                    Zona de Peligro
+                  </h3>
+                  <p className="text-gray-300 mb-6">
+                    Las acciones en esta sección son irreversibles. Por favor, procede con cuidado.
+                  </p>
+
+                  {/* Eliminar Cuenta */}
+                  <div className="rounded-lg bg-gray-900/50 border border-red-500/30 p-4">
+                    <h4 className="text-base font-semibold text-white mb-2">
+                      Eliminar Cuenta
+                    </h4>
+                    <p className="text-sm text-gray-400 mb-4">
+                      Una vez que elimines tu cuenta, no hay forma de recuperarla. Se eliminarán permanentemente todos tus datos personales, propiedades publicadas y otras asociaciones de cuenta.
+                    </p>
+                    <button
+                      onClick={() => setConfirmDialog({
+                        open: true,
+                        title: "Eliminar Cuenta Permanentemente",
+                        message: "¿Estás completamente seguro? Esta acción no se puede deshacer. Se eliminarán permanentemente tu cuenta, todas tus propiedades publicadas y todos tus datos personales.",
+                        action: "delete_account"
+                      })}
+                      disabled={submitting}
+                      className="rounded-lg bg-red-600 px-6 py-2 font-semibold text-white transition-all hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {submitting ? "Procesando..." : "Eliminar Mi Cuenta"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Modal de Confirmación */}
+          {confirmDialog.open && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+              <div className="rounded-2xl bg-gray-900 border border-purple-500/30 p-8 max-w-md w-full mx-4 shadow-2xl">
+                <h2 className="text-xl font-bold text-white mb-4">
+                  {confirmDialog.title}
+                </h2>
+                <p className="text-gray-300 mb-8">
+                  {confirmDialog.message}
+                </p>
+                
+                {confirmDialog.action === "delete_account" && (
+                  <p className="text-sm text-yellow-400 mb-6 bg-yellow-950/30 border border-yellow-500/30 rounded-lg p-3">
+                    💡 <strong>Consejo:</strong> Si en el futuro cambias de opinión, necesitarás crear una nueva cuenta.
+                  </p>
+                )}
+
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => setConfirmDialog({ open: false, title: "", message: "", action: null })}
+                    disabled={submitting}
+                    className="flex-1 rounded-lg border border-purple-500/50 px-4 py-2 font-semibold text-purple-300 transition-colors hover:bg-purple-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (confirmDialog.action === "delete_photo") {
+                        handleDeletePhoto();
+                      } else if (confirmDialog.action === "delete_account") {
+                        handleDeleteAccount();
+                      }
+                    }}
+                    disabled={submitting}
+                    className="flex-1 rounded-lg bg-red-600 px-4 py-2 font-semibold text-white transition-all hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {submitting ? "Procesando..." : "Confirmar"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

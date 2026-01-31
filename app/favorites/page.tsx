@@ -11,6 +11,7 @@ interface Property {
   title: string;
   description: string | null;
   price_per_night: string;
+  province: string | null;
   city: string | null;
   num_guests: number;
   num_rooms: number;
@@ -137,6 +138,7 @@ export default function FavoritesPage() {
                     title={favorite.property.title}
                     description={favorite.property.description}
                     price_per_night={parseFloat(favorite.property.price_per_night)}
+                    province={favorite.property.province}
                     city={favorite.property.city}
                     num_guests={favorite.property.num_guests}
                     num_rooms={favorite.property.num_rooms}

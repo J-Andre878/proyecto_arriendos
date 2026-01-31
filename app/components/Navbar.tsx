@@ -10,11 +10,41 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const loading = status === "loading";
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   const handleLogout = () => {
     signOut({ callbackUrl: "/" });
     setMenuOpen(false);
   };
+
+  // Cargar imagen de perfil del usuario
+  useEffect(() => {
+    if (session?.user) {
+      const fetchProfileImage = async () => {
+        try {
+          const response = await fetch("/api/profile");
+          const data = await response.json();
+          if (data.user) {
+            // Usar SOLO profile_image_url (la foto que el usuario subió)
+            // No usar avatar_url que es para OAuth de Google
+            setProfileImage(data.user.profile_image_url || null);
+          }
+        } catch (err) {
+          console.error("Error fetching profile image:", err);
+        }
+      };
+
+      fetchProfileImage();
+
+      // Refrescar la imagen cada vez que el usuario vuelve a la ventana
+      const handleFocus = () => {
+        fetchProfileImage();
+      };
+
+      window.addEventListener("focus", handleFocus);
+      return () => window.removeEventListener("focus", handleFocus);
+    }
+  }, [session?.user]);
 
   // Cerrar menú al hacer clic fuera
   useEffect(() => {
@@ -69,9 +99,17 @@ export default function Navbar() {
                     onClick={() => setMenuOpen(!menuOpen)}
                     className="flex items-center gap-3 rounded-lg border border-purple-300 dark:border-purple-700 px-4 py-2 bg-white/10 dark:bg-white/10 shadow-md transition-all duration-200 hover:bg-purple-50 dark:hover:bg-gray-700 hover:shadow-lg group text-base font-semibold"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-violet-500 dark:to-cyan-400 text-white font-bold text-base shadow group-hover:scale-110 group-hover:ring-2 group-hover:ring-purple-300 dark:group-hover:ring-purple-700 transition-transform duration-200">
-                      {session.user?.name?.charAt(0).toUpperCase() || "U"}
-                    </div>
+                    {profileImage ? (
+                      <img
+                        src={profileImage}
+                        alt={session.user?.name || "Perfil"}
+                        className="h-10 w-10 rounded-full object-cover shadow group-hover:scale-110 group-hover:ring-2 group-hover:ring-purple-300 dark:group-hover:ring-purple-700 transition-transform duration-200"
+                      />
+                    ) : (
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-violet-500 dark:to-cyan-400 text-white font-bold text-base shadow group-hover:scale-110 group-hover:ring-2 group-hover:ring-purple-300 dark:group-hover:ring-purple-700 transition-transform duration-200">
+                        {session.user?.name?.charAt(0).toUpperCase() || "U"}
+                      </div>
+                    )}
                     <span className="font-semibold text-gray-800 dark:text-gray-200 text-base group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors duration-200">{session.user?.name || session.user?.email}</span>
                   </button>
 
@@ -94,19 +132,10 @@ export default function Navbar() {
                       </Link>
                       <Link
                         href="/profile"
-                        className="block px-5 py-3 text-base font-semibold text-gray-900 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-800 hover:text-purple-700 dark:hover:text-purple-400 transition-colors border-b border-gray-100 dark:border-gray-800"
+                        className="block px-5 py-3 text-base font-semibold text-gray-900 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-800 hover:text-purple-700 dark:hover:text-purple-400 transition-colors"
                         onClick={() => setMenuOpen(false)}
                       >
                         Editar Perfil
-                      </Link>
-                      <Link
-                        href="/privacy-policy"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block px-5 py-3 text-base font-semibold text-gray-900 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-800 hover:text-purple-700 dark:hover:text-purple-400 transition-colors border-b border-gray-100 dark:border-gray-800"
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        Política de Privacidad
                       </Link>
                       <button
                         onClick={handleLogout}
@@ -193,15 +222,6 @@ export default function Navbar() {
                 >
                   Editar Perfil
                 </Link>
-                <Link
-                  href="/privacy-policy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Política de Privacidad
-                </Link>
                 <button
                   onClick={handleLogout}
                   className="block w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-950/50 rounded"
@@ -224,15 +244,6 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                 >
                   Registrarse
-                </Link>
-                <Link
-                  href="/privacy-policy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Política de Privacidad
                 </Link>
               </div>
             )}

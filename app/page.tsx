@@ -48,7 +48,10 @@ export default async function Home() {
               Havela
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-xl text-purple-100 dark:text-purple-200">
-              Encuentra tu alojamiento perfecto en cualquier parte. Espacios únicos,
+              🌎 <span className="font-semibold">Arriendos de todo el Ecuador</span>
+            </p>
+            <p className="mx-auto mt-3 max-w-2xl text-lg text-purple-100 dark:text-purple-200">
+              Encuentra tu alojamiento perfecto en cualquier provincia. Espacios únicos,
               experiencias inolvidables.
             </p>
 
@@ -66,7 +69,7 @@ export default async function Home() {
             Propiedades Disponibles
           </h2>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            {properties.length} alojamientos disponibles en la plataforma
+            Arriendos disponibles en {properties.length} propiedades
           </p>
         </div>
 
@@ -80,6 +83,7 @@ export default async function Home() {
                 title={property.title}
                 description={property.description}
                 price_per_night={Number(property.price_per_night)}
+                province={property.province}
                 city={property.city}
                 num_guests={property.num_guests}
                 num_rooms={property.num_rooms}
@@ -118,14 +122,7 @@ export default async function Home() {
         )}
       </main>
 
-      {/* Footer simple */}
-      <footer className="mt-20 border-t border-purple-500/30 dark:border-purple-500/30 bg-white/10 dark:bg-white/10">
-        <div className="mx-auto max-w-[92.5rem] px-3 py-8 sm:px-4 lg:px-6">
-          <p className="text-center text-gray-500 dark:text-gray-400">
-            © 2026 Havela. Todos los derechos reservados.
-          </p>
-        </div>
-      </footer>
+
     </div>
   );
 }

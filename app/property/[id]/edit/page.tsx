@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { validatePhoneNumber } from "@/lib/phoneValidation";
+import { ECUADOR_PROVINCES } from "@/lib/ecuadorProvinces";
 
 export default function EditPropertyPage() {
   const router = useRouter();
@@ -25,7 +26,8 @@ export default function EditPropertyPage() {
     title: "",
     description: "",
     address: "",
-    city: "Loja",
+    province: "",
+    city: "",
     phones: [""],
     num_guests: 1,
     num_rooms: 1,
@@ -51,7 +53,8 @@ export default function EditPropertyPage() {
             title: property.title,
             description: property.description || "",
             address: property.address,
-            city: property.city || "Loja",
+            province: property.province || "",
+            city: property.city || "",
             phones: property.property_phones?.map((p: any) => p.phone_number) || [""],
             num_guests: property.num_guests || 1,
             num_rooms: property.num_rooms || 1,
@@ -341,12 +344,13 @@ export default function EditPropertyPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Ciudad *
+                    Provincia *
                   </label>
                   <select
-                    name="city"
-                    value={formData.city}
+                    name="province"
+                    value={formData.province}
                     onChange={handleInputChange}
+                    required
                     className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-gray-900/50 appearance-none cursor-pointer"
                     style={{
                       backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23d1d5db' d='M1 4l5 5 5-5'/%3E%3C/svg%3E")`,
@@ -355,17 +359,36 @@ export default function EditPropertyPage() {
                       paddingRight: '2.5rem',
                     }}
                   >
-                    <option value="Loja">Loja</option>
-                    <option value="Quito">Quito</option>
-                    <option value="Cuenca">Cuenca</option>
+                    <option value="" style={{backgroundColor: '#1f2937', color: '#ffffff'}}>Selecciona una provincia</option>
+                    {ECUADOR_PROVINCES.map((province) => (
+                      <option key={province} value={province} style={{backgroundColor: '#1f2937', color: '#ffffff'}}>
+                        {province}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Tipo de propiedad *
+                    Ciudad *
                   </label>
-                  <select
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full rounded-lg border border-purple-500/50 px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 bg-white/10"
+                    placeholder="Ej: Loja, Cuenca, Quito..."
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Tipo de propiedad *
+                </label>
+                <select
                     name="property_type"
                     value={formData.property_type}
                     onChange={handleInputChange}
@@ -383,7 +406,6 @@ export default function EditPropertyPage() {
                     <option value="villa">Villa</option>
                   </select>
                 </div>
-              </div>
               </div>
 
               {/* Números de Celular */}

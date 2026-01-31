@@ -58,7 +58,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           <div className="flex-1">
             <h1 className="text-5xl font-bold text-white">{property.title}</h1>
             <p className="mt-3 text-xl text-gray-300">
-              📍 {property.city}
+              🌎 {property.province}
             </p>
           </div>
           {/* Botón de favorito */}
@@ -133,10 +133,13 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             <div className="rounded-lg bg-white/10 p-8 shadow-md">
               <h2 className="text-3xl font-bold text-white mb-6">Ubicación</h2>
               <p className="text-lg text-gray-300">
-                <span className="font-semibold">Dirección:</span> {property.address}
+                <span className="font-semibold">Provincia:</span> {property.province}
               </p>
               <p className="mt-3 text-lg text-gray-300">
                 <span className="font-semibold">Ciudad:</span> {property.city}
+              </p>
+              <p className="mt-3 text-lg text-gray-300">
+                <span className="font-semibold">Dirección:</span> {property.address}
               </p>
             </div>
           </div>

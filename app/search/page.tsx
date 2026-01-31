@@ -10,6 +10,7 @@ interface Property {
   title: string;
   description: string | null;
   price_per_night: number;
+  province: string | null;
   city: string | null;
   num_guests: number;
   num_rooms: number;
@@ -134,7 +135,7 @@ function SearchPageContent() {
         {/* Título */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white">Buscar Propiedades</h1>
-          <p className="mt-2 text-lg text-gray-400">Encuentra el alojamiento perfecto para ti</p>
+          <p className="mt-2 text-lg text-gray-400">🌎 Encuentra tu arriendo perfecto en todo el Ecuador</p>
         </div>
 
         {/* Formulario de filtros */}
@@ -343,6 +344,7 @@ function SearchPageContent() {
                       title={property.title}
                       description={property.description}
                       price_per_night={Number(property.price_per_night)}
+                      province={property.province}
                       city={property.city}
                       num_guests={property.num_guests}
                       num_rooms={property.num_rooms}

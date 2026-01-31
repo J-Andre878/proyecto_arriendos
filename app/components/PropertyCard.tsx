@@ -7,6 +7,7 @@ interface PropertyCardProps {
   title: string;
   description: string | null;
   price_per_night: number;
+  province: string | null;
   city: string | null;
   num_guests: number;
   num_rooms: number;
@@ -20,6 +21,7 @@ export default function PropertyCard({
   title,
   description,
   price_per_night,
+  province,
   city,
   num_guests,
   num_rooms,
@@ -79,7 +81,7 @@ export default function PropertyCard({
       <div className="flex flex-1 flex-col p-5">
         {/* Ubicación y título */}
         <div className="mb-2">
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{city || "Sin especificar"}</p>
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">🌎 {province || "Sin especificar"}</p>
           <h3 className="mt-1 line-clamp-2 text-xl font-bold text-gray-900 dark:text-white">
             {title}
           </h3>
