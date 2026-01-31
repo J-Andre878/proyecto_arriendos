@@ -40,7 +40,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      favorites: favorites.map((fav: any) => ({
+      favorites: favorites.map((fav) => ({
         id: fav.id,
         property: fav.properties,
         created_at: fav.created_at,
