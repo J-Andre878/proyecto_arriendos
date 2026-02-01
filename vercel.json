@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run build",
-  "installCommand": "npm ci",
+  "installCommand": "npm install",
   "env": {
     "NEXT_TELEMETRY_DISABLED": "1",
     "NODE_OPTIONS": "--max-old-space-size=3072"
