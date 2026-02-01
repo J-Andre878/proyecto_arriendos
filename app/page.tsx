@@ -3,6 +3,8 @@ import Navbar from "./components/Navbar";
 import { prisma } from "@/lib/prisma";
 import SearchBar from "./components/SearchBar";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   // Obtener propiedades activas con sus imágenes (máximo 30 días)
   const thirtyDaysAgo = new Date();
