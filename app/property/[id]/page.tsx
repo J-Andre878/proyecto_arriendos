@@ -246,13 +246,14 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 
                 {property.property_phones && property.property_phones.length > 0 && (
                   <div className="space-y-3">
-                    {property.property_phones.map((phoneObj, idx) => (
-                      <div key={phoneObj.id} className="flex items-center rounded-lg bg-purple-950/50 p-4 border border-purple-500/30">
-                        <span className="mr-4 text-xl">📱</span>
-                        <div>
-                          <p className="text-sm text-purple-400 font-semibold">
-                            {phoneObj.is_primary ? "Teléfono principal" : `Teléfono ${idx + 1}`}
-                          </p>
+                    {property.property_phones.map(
+                      (phoneObj: typeof property.property_phones[number], idx: number) => (
+                        <div key={phoneObj.id} className="flex items-center rounded-lg bg-purple-950/50 p-4 border border-purple-500/30">
+                          <span className="mr-4 text-xl">📱</span>
+                          <div>
+                            <p className="text-sm text-purple-400 font-semibold">
+                              {phoneObj.is_primary ? "Teléfono principal" : `Teléfono ${idx + 1}`}
+                            </p>
                           <a
                             href={`tel:${phoneObj.phone_number}`}
                             className="font-medium text-purple-400 hover:text-purple-300 hover:underline text-base"
