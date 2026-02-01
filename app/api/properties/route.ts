@@ -76,7 +76,9 @@ export async function GET(request: Request) {
     // Calcular rating promedio para cada propiedad
     const propertiesWithRating = properties.map(
       (property: typeof properties[number]) => {
-        const ratings = property.reviews.map((r) => Number(r.rating));
+        const ratings = property.reviews.map(
+          (r: typeof property.reviews[number]) => Number(r.rating)
+        );
         const avgRating =
           ratings.length > 0
             ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
