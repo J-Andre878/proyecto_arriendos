@@ -81,7 +81,7 @@ export async function GET(request: Request) {
         );
         const avgRating =
           ratings.length > 0
-            ? ratings.reduce((sum: number, rating) => sum + rating, 0) / ratings.length
+            ? ratings.reduce((sum: number, rating: number) => sum + rating, 0) / ratings.length
             : null;
 
         return {
