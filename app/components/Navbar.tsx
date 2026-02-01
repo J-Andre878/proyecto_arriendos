@@ -4,6 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -11,6 +12,13 @@ export default function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const loading = status === "loading";
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Cerrar menú cuando la ruta cambia
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   const handleLogout = () => {
     signOut({ callbackUrl: "/" });
@@ -55,11 +63,11 @@ export default function Navbar() {
     };
 
     if (menuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("click", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, [menuOpen]);
 
@@ -194,36 +202,46 @@ export default function Navbar() {
                 <div className="px-4 py-2 font-semibold text-white">
                   {session.user?.name || session.user?.email}
                 </div>
-                <Link
-                  href="/publish"
-                  className="block px-5 py-2 text-base font-bold rounded-xl bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-md transition-all duration-200 hover:bg-blue-700 hover:from-blue-700 hover:to-blue-500 hover:shadow-lg flex items-center mb-2"
-                  onClick={() => setMenuOpen(false)}
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setTimeout(() => router.push("/publish"), 50);
+                  }}
+                  className="block w-full text-left px-5 py-2 text-base font-bold rounded-xl bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-md transition-all duration-200 hover:bg-blue-700 hover:from-blue-700 hover:to-blue-500 hover:shadow-lg mb-2"
                 >
                   Publicar Propiedad
-                </Link>
-                <Link
-                  href="/my-properties"
-                  className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
-                  onClick={() => setMenuOpen(false)}
+                </button>
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setTimeout(() => router.push("/my-properties"), 50);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
                 >
                   Mis Propiedades
-                </Link>
-                <Link
-                  href="/favorites"
-                  className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
-                  onClick={() => setMenuOpen(false)}
+                </button>
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setTimeout(() => router.push("/favorites"), 50);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
                 >
                   Guardados
-                </Link>
-                <Link
-                  href="/profile"
-                  className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
-                  onClick={() => setMenuOpen(false)}
+                </button>
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setTimeout(() => router.push("/profile"), 50);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
                 >
                   Editar Perfil
-                </Link>
+                </button>
                 <button
-                  onClick={handleLogout}
+                  onClick={() => {
+                    handleLogout();
+                  }}
                   className="block w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-950/50 rounded"
                 >
                   Cerrar Sesión
@@ -234,14 +252,12 @@ export default function Navbar() {
                 <Link
                   href="/login"
                   className="block px-4 py-2 text-sm text-gray-100 hover:bg-purple-900/50 rounded"
-                  onClick={() => setMenuOpen(false)}
                 >
                   Iniciar Sesión
                 </Link>
                 <Link
                   href="/register"
                   className="block px-4 py-2 text-sm text-cyan-400 font-semibold hover:bg-purple-900/50 rounded"
-                  onClick={() => setMenuOpen(false)}
                 >
                   Registrarse
                 </Link>
