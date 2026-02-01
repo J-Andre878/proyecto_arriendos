@@ -160,18 +160,19 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               {/* Teléfonos de contacto */}
               {property.property_phones && property.property_phones.length > 0 && (
                 <div className="space-y-3 mb-5">
-                  {property.property_phones.map((phoneObj, idx) => (
-                    <div key={phoneObj.id} className="flex flex-col gap-2 border border-purple-500/30 rounded-lg p-4 bg-purple-950/50">
-                      <span className="text-sm text-purple-400 font-semibold">
-                        {phoneObj.is_primary ? "Teléfono principal" : `Teléfono ${idx + 1}`}
-                      </span>
-                      <div className="flex gap-2">
-                        <a
-                          href={`tel:${phoneObj.phone_number}`}
-                          className="flex-1 flex items-center justify-center rounded bg-gradient-to-r from-green-600 to-emerald-600 py-3 px-3 text-white font-bold hover:from-green-700 hover:to-emerald-700 transition text-base"
-                        >
-                          📞 Llamar
-                        </a>
+                  {property.property_phones.map(
+                    (phoneObj: typeof property.property_phones[number], idx) => (
+                      <div key={phoneObj.id} className="flex flex-col gap-2 border border-purple-500/30 rounded-lg p-4 bg-purple-950/50">
+                        <span className="text-sm text-purple-400 font-semibold">
+                          {phoneObj.is_primary ? "Teléfono principal" : `Teléfono ${idx + 1}`}
+                        </span>
+                        <div className="flex gap-2">
+                          <a
+                            href={`tel:${phoneObj.phone_number}`}
+                            className="flex-1 flex items-center justify-center rounded bg-gradient-to-r from-green-600 to-emerald-600 py-3 px-3 text-white font-bold hover:from-green-700 hover:to-emerald-700 transition text-base"
+                          >
+                            📞 Llamar
+                          </a>
                         <a
                           href={`https://wa.me/593${phoneObj.phone_number.replace(/^0/, '')}?text=Hola, estoy interesado en tu propiedad: ${property.title}`}
                           target="_blank"
