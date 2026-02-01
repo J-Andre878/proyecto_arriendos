@@ -40,11 +40,13 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      favorites: favorites.map((fav) => ({
-        id: fav.id,
-        property: fav.properties,
-        created_at: fav.created_at,
-      })),
+      favorites: favorites.map(
+        (fav: typeof favorites[number]) => ({
+          id: fav.id,
+          property: fav.properties,
+          created_at: fav.created_at,
+        })
+      ),
     });
   } catch (error) {
     console.error("Error al obtener favoritos:", error);
