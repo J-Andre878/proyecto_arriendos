@@ -74,19 +74,21 @@ export async function GET(request: Request) {
     });
 
     // Calcular rating promedio para cada propiedad
-    const propertiesWithRating = properties.map((property) => {
-      const ratings = property.reviews.map((r) => Number(r.rating));
-      const avgRating =
-        ratings.length > 0
-          ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
-          : null;
+    const propertiesWithRating = properties.map(
+      (property: typeof properties[number]) => {
+        const ratings = property.reviews.map((r) => Number(r.rating));
+        const avgRating =
+          ratings.length > 0
+            ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+            : null;
 
-      return {
-        ...property,
-        avg_rating: avgRating,
-        total_reviews: ratings.length,
-      };
-    });
+        return {
+          ...property,
+          avg_rating: avgRating,
+          total_reviews: ratings.length,
+        };
+      }
+    );
 
     return NextResponse.json({
       success: true,
