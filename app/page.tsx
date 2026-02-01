@@ -89,11 +89,13 @@ export default async function Home() {
                 num_rooms={property.num_rooms}
                 num_beds={property.num_beds}
                 num_bathrooms={property.num_bathrooms}
-                images={property.property_images.map((img) => ({
-                  id: img.id,
-                  image_url: img.image_url,
-                  is_main: img.is_main,
-                }))}
+                images={property.property_images.map(
+                  (img: typeof property.property_images[number]) => ({
+                    id: img.id,
+                    image_url: img.image_url,
+                    is_main: img.is_main,
+                  })
+                )}
               />
             ))}
           </div>
