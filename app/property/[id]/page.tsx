@@ -161,7 +161,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               {property.property_phones && property.property_phones.length > 0 && (
                 <div className="space-y-3 mb-5">
                   {property.property_phones.map(
-                    (phoneObj: typeof property.property_phones[number], idx) => (
+                    (phoneObj: typeof property.property_phones[number], idx: number) => (
                       <div key={phoneObj.id} className="flex flex-col gap-2 border border-purple-500/30 rounded-lg p-4 bg-purple-950/50">
                         <span className="text-sm text-purple-400 font-semibold">
                           {phoneObj.is_primary ? "Teléfono principal" : `Teléfono ${idx + 1}`}
